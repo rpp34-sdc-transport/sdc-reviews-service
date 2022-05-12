@@ -1,0 +1,35 @@
+{
+  "name": "sdc-reviews-service",
+  "version": "1.0.0",
+  "description": "Delivers Review Data and Handles User Generated Content",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "server-dev": "npx nodemon server/server.js",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rpp34-sdc-transport/sdc-reviews-service.git"
+  },
+  "author": "RetroInferno",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rpp34-sdc-transport/sdc-reviews-service/issues"
+  },
+  "homepage": "https://github.com/rpp34-sdc-transport/sdc-reviews-service#readme",
+  "dependencies": {
+    "express": "^4.18.1",
+    "mongodb": "^4.6.0",
+    "mongoose": "^6.3.3",
+    "bluebird": "^3.7.2",
+    "dotenv": "^16.0.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.17.10",
+    "@babel/preset-env": "^7.17.10",
+    "babel-jest": "^28.1.0",
+    "jest": "^28.1.0",
+    "nodemon": "^2.0.16"
+  }
+}
