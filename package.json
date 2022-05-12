@@ -30,6 +30,8 @@
     "@babel/preset-env": "^7.17.10",
     "babel-jest": "^28.1.0",
     "jest": "^28.1.0",
-    "nodemon": "^2.0.16"
+    "nodemon": "^2.0.16",
+    "eslint": "^8.15.0",
+    "eslint-plugin-jest": "^26.1.5"
   }
 }
