@@ -1,5 +1,6 @@
 const express = require('express')
 const server = express()
+require('./db.js');
 require('dotenv').config();
 const PORT = process.env.PORT || 3000;
 
@@ -10,4 +11,6 @@ server.get('/', (req, res) => {
 server.listen(PORT, () => {
   console.log(`Review Service Listening on ${PORT}`);
 });
+
+
 
