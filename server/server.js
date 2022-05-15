@@ -62,9 +62,9 @@ async function test() {
 
     const result = await ReviewMetas.find({product_id: "71719"}).populate('results');
     console.log(result);
-    // result[0].results.forEach((review)=>{
-    //   console.log(review);
-    // })
+    result[0].results.forEach((review)=>{
+      console.log(review);
+    })
     // POPULATE ON QUERY OK!
 
   } catch (e) {

@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const reviewModelName = 'Reviews';
+const metaModelName = 'ReviewMetas';
 
 const photosSchema = new Schema({
   id: Number,
@@ -36,7 +38,7 @@ const reviewMeta = new Schema({
   results: [{
     // to be populat()ed!
     type: Schema.Types.ObjectId,
-    ref: 'Reviews', // THis must be the model name, not the schema name
+    ref: reviewModelName,
   }],
 })
 
@@ -58,8 +60,8 @@ const reviewSchema = new Schema({
 
 
 
-const ReviewMetas = mongoose.model('ReviewMetas', reviewMeta)
-const Reviews = mongoose.model('Reviews', reviewSchema)
+const ReviewMetas = mongoose.model(metaModelName, reviewMeta)
+const Reviews = mongoose.model(reviewModelName, reviewSchema)
 
 module.exports = {
   ReviewMetas,
