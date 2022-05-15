@@ -41,7 +41,7 @@ const reviewMeta = new Schema({
     // to be populat()ed!
     type: Schema.Types.ObjectId,
     ref: reviewModelName,
-  }],
+  }]
 })
 
 const reviewSchema = new Schema({
@@ -49,6 +49,7 @@ const reviewSchema = new Schema({
     type: Number,
     unique: true,
   },
+  product_id: Number,
   rating: Number,
   summary: String,
   recommend: Boolean,
