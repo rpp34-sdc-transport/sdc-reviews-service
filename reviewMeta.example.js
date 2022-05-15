@@ -32,3 +32,5 @@ var reviewMeta =
         }
     }
 }
+
+module.exports = reviewMeta;

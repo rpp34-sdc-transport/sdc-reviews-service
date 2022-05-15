@@ -1,8 +1,26 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const photosSchema = new Schema({
+  id: Number,
+  url: String, //valid URL
+});
+
+const characteristicsSchema = new Schema({
+  id:  {
+    type: Number,
+    unique: true,
+  },
+  value: String, // Average as a string
+  numFeedback: Number, //Added field
+  description: String, //Added field
+});
+
 const reviewMeta = new Schema({
-  product: String, //String of Product ID
+  product_id: {
+    type: String, //String of Product ID
+    unique: true,
+  },
   ratings: {
     1: String, //Number as a string
     2: String,
@@ -23,7 +41,10 @@ const reviewMeta = new Schema({
 })
 
 const reviewSchema = new Schema({
-  review_id: Number,
+  review_id: {
+    type: Number,
+    unique: true,
+  },
   rating: Number,
   summary: String,
   recommend: Boolean,
@@ -35,22 +56,12 @@ const reviewSchema = new Schema({
   photos: [photosSchema],
 })
 
-const photosSchema = new Schema({
-  id: Number,
-  url: String, //valid URL
-});
 
-const characteristicsSchema = new Schema({
-  id: Number,
-  value: Number,
-  numFeedback: Number,
-  description: String,
-});
 
-const ProductMeta = mongoose.model('ReviewMeta', reviewMeta)
+const ReviewMetas = mongoose.model('ReviewMetas', reviewMeta)
 const Reviews = mongoose.model('Reviews', reviewSchema)
 
 module.exports = {
-  ProductMeta,
+  ReviewMetas,
   Reviews,
 };
