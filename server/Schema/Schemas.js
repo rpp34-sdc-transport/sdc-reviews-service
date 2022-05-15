@@ -8,33 +8,35 @@ const photosSchema = new Schema({
   url: String, //valid URL
 });
 
+// MAY CONVERT TO MODEL BASED ON AGGREGATION NEEDS
 const characteristicsSchema = new Schema({
   id:  {
     type: Number,
-    unique: true,
+    // unique: true, // To be tured back on when migrating
+    default: mongoose.Types.ObjectId(), // create a new one as a stand in!
   },
-  value: String, // Average as a string
+  value: Number, // Average as a string (converted from string automatically)
   numFeedback: Number, //Added field
   description: String, //Added field
 });
 
 const reviewMeta = new Schema({
   product_id: {
-    type: String, //String of Product ID
+    type: Number,
     unique: true,
   },
   ratings: {
-    1: String, //Number as a string
-    2: String,
-    3: String,
-    4: String,
-    5: String,
+    1: Number, //Number as a string (auto converted)
+    2: Number,
+    3: Number,
+    4: Number,
+    5: Number,
   },
   recommended: {
-    false: String, //Number as a string
-    true: String,
+    false: Number, //Number as a string
+    true: Number,
   },
-  characteristics: [characteristicsSchema],
+  characteristics: [characteristicsSchema], // This may go away or become an aggreated table
   results: [{
     // to be populat()ed!
     type: Schema.Types.ObjectId,
@@ -52,10 +54,15 @@ const reviewSchema = new Schema({
   recommend: Boolean,
   response: String,
   body: String,
-  date: String, //Date String Z format
+  date: {
+    type: Date, //Date String Z format
+    default: new Date(),
+  },
   reviewer_name: String,
   helpfulness: Number,
   photos: [photosSchema],
+  reported: Boolean, //Added feature
+  characteristics: [characteristicsSchema], //Added feature
 })
 
 

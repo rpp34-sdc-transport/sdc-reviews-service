@@ -65,6 +65,7 @@ async function test() {
     result[0].results.forEach((review)=>{
       console.log(review);
     })
+    console.log(result[0].characteristics);
     // POPULATE ON QUERY OK!
 
   } catch (e) {
