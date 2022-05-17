@@ -5,19 +5,17 @@ const metaModelName = 'ReviewMetas';
 
 const photosSchema = new Schema({
   id: Number,
-  url: String, //valid URL
+  url: String,
 });
 
-// MAY CONVERT TO MODEL BASED ON AGGREGATION NEEDS
 const characteristicsSchema = new Schema({
-  id:  {
+  id:  { //This is going to NOT be needed, but an id is still needed due to FEC requiremnts.
     type: Number,
     // unique: true, // To be tured back on when migrating
-    default: mongoose.Types.ObjectId(), // create a new one as a stand in!
+    default: mongoose.Types.ObjectId(),
   },
-  value: Number, // Average as a string (converted from string automatically)
-  numFeedback: Number, //Added field
-  description: String, //Added field
+  value: Number,
+  description: String, //Added field for new schema
 });
 
 const reviewMeta = new Schema({
@@ -25,20 +23,28 @@ const reviewMeta = new Schema({
     type: Number,
     unique: true,
   },
+  dateUpdated: Date,
+  lastReviewDate: Date,
+
+  /***
+   * The Below are going to be updated intermittenly when
+   * `lastReviewDate` exceeds `dateUpdated`by X min when reading data.
+   */
   ratings: {
-    1: Number, //Number as a string (auto converted)
+    1: Number,
     2: Number,
     3: Number,
     4: Number,
     5: Number,
   },
   recommended: {
-    false: Number, //Number as a string
+    false: Number,
     true: Number,
   },
-  characteristics: [characteristicsSchema], // This may go away or become an aggreated table
+  characteristics: [characteristicsSchema],
+
+  //WILL GO AWAY DURING ETL
   results: [{
-    // to be populat()ed!
     type: Schema.Types.ObjectId,
     ref: reviewModelName,
   }]
@@ -56,14 +62,14 @@ const reviewSchema = new Schema({
   response: String,
   body: String,
   date: {
-    type: Date, //Date String Z format
+    type: Date,
     default: new Date(),
   },
   reviewer_name: String,
   helpfulness: Number,
   photos: [photosSchema],
-  reported: Boolean, //Added feature
-  characteristics: [characteristicsSchema], //Added feature
+  reported: Boolean,
+  characteristics: [characteristicsSchema],
 })
 
 
