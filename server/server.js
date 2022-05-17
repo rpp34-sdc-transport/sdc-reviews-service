@@ -1,6 +1,6 @@
 const express = require('express')
 const server = express()
-require('./db.js');
+require('./db/db.js');
 require('dotenv').config();
 const PORT = process.env.PORT || 3000;
 
@@ -28,7 +28,7 @@ server.listen(PORT, () => {
 
 //-------------- TEST TO BE MOVED TO JEST TESTS--------------//
 
-const { ReviewMetas, Reviews } = require('./schema/schemas.js');
+const { ReviewMetas, Reviews } = require('./db/schemas.js');
 const testReviews = require('../reviews.example.js')
 const testMeta = require('../reviewMeta.example.js')
 const characteristics = parseMeta(testMeta.characteristics);

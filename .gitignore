@@ -1,3 +1,4 @@
 node_modules/
 *.env
 test_coverage/
+*.DS_Store
