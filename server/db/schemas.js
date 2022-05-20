@@ -2,20 +2,29 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const reviewModelName = 'Reviews';
 const metaModelName = 'ReviewMetas';
+const charDescName = 'characteristicsDescription';
 
 const photosSchema = new Schema({
   id: Number,
   url: String,
 });
 
+const charactersticsDescriptionSchema = new Schema({
+  id: {
+    type: Number,
+    unique: true,
+  },
+  description: String,
+});
+
 const characteristicsSchema = new Schema({
-  id:  { //This is going to NOT be needed, but an id is still needed due to FEC requiremnts.
+  id: { // this will be used for inserstion (this is the caracterstics_id)
     type: Number,
     // unique: true, // To be tured back on when migrating
     default: mongoose.Types.ObjectId(),
   },
   value: Number,
-  description: String, //Added field for new schema
+  description:String, //This is purely here for the meta! posetd reviews will not have this value.
 });
 
 const reviewMeta = new Schema({
@@ -41,13 +50,8 @@ const reviewMeta = new Schema({
     false: Number,
     true: Number,
   },
-  characteristics: [characteristicsSchema],
+  characteristics: [characteristicsSchema], //for compilation of the Meta, description needs to be looked up via ID...
 
-  //WILL GO AWAY DURING ETL
-  results: [{
-    type: Schema.Types.ObjectId,
-    ref: reviewModelName,
-  }]
 })
 
 const reviewSchema = new Schema({
@@ -76,8 +80,10 @@ const reviewSchema = new Schema({
 
 const ReviewMetas = mongoose.model(metaModelName, reviewMeta)
 const Reviews = mongoose.model(reviewModelName, reviewSchema)
+const CharDesc = mongoose.model(charDescName, charactersticsDescriptionSchema)
 
 module.exports = {
   ReviewMetas,
   Reviews,
+  CharDesc,
 };
