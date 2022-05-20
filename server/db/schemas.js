@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const reviewModelName = 'Reviews';
 const metaModelName = 'ReviewMetas';
-const charDescName = 'characteristicsDescription';
+const charDescName = 'characteristicsDescriptions';
 
 const photosSchema = new Schema({
   id: Number,
@@ -55,7 +55,7 @@ const reviewMeta = new Schema({
 })
 
 const reviewSchema = new Schema({
-  review_id: {
+  id: {
     type: Number,
     unique: true,
   },
@@ -70,6 +70,7 @@ const reviewSchema = new Schema({
     default: new Date(),
   },
   reviewer_name: String,
+  reviewer_email: String,
   helpfulness: Number,
   photos: [photosSchema],
   reported: Boolean,
@@ -80,10 +81,10 @@ const reviewSchema = new Schema({
 
 const ReviewMetas = mongoose.model(metaModelName, reviewMeta)
 const Reviews = mongoose.model(reviewModelName, reviewSchema)
-const CharDesc = mongoose.model(charDescName, charactersticsDescriptionSchema)
+const CharDescs = mongoose.model(charDescName, charactersticsDescriptionSchema)
 
 module.exports = {
   ReviewMetas,
   Reviews,
-  CharDesc,
+  CharDescs,
 };
