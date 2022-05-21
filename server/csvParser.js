@@ -37,6 +37,8 @@ const connectDB = async () => {
       var array = [];
       var counter = 1;
       const stream = fs.createReadStream('/Users/Zhaowei/rpp34/elt_data_sdc/reviews.csv')
+
+      console.log(Date());
       stream.pipe(csv())
         .on('data', async (row) => {
           try{
@@ -44,7 +46,7 @@ const connectDB = async () => {
             if (array.length === 10000) {
               stream.pause();
               counter += 10000;
-              console.log(counter);
+              console.log(`${counter} rows`);
               await Reviews.insertMany(array);
               array = [];
               stream.resume();
@@ -55,9 +57,10 @@ const connectDB = async () => {
         })
         .on('end', async () => {
           counter += array.length;
-          console.log(counter);
+          console.log(`${counter} rows`);
           await Reviews.insertMany(array);
           array=[];
+          console.log(Date());
           console.log('end of stream');
         });
 
