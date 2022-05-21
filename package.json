@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node server/server.js",
     "server-dev": "npx nodemon server/server.js",
+    "review-testbed": "node server/eltScripts/InsertReviews_1_testBed.js",
     "test": "jest"
   },
   "repository": {

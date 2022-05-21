@@ -15,7 +15,7 @@ server.listen(PORT, () => {
   console.log(`Review Service Listening on ${PORT}`);
 });
 
-/*
+/**/
 
 const parseMeta = (charObj) => {
   var characteristics = [];
@@ -75,4 +75,4 @@ async function test() {
   }
 }
 
-*/
+/**/
