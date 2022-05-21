@@ -23,7 +23,8 @@
     "mongodb": "^4.6.0",
     "mongoose": "^6.3.3",
     "bluebird": "^3.7.2",
-    "dotenv": "^16.0.1"
+    "dotenv": "^16.0.1",
+    "csv-parser": "^3.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.17.10",

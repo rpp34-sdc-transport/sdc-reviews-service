@@ -4,16 +4,6 @@ require('./db/db.js');
 require('dotenv').config();
 const PORT = process.env.PORT || 3000;
 
-const parseMeta = (charObj) => {
-  var characteristics = [];
-  for (let key in charObj) {
-    characteristics.push({
-      ...charObj[key],
-      description: key,
-    })
-  }
-  return characteristics;
-}
 
 
 
@@ -25,12 +15,24 @@ server.listen(PORT, () => {
   console.log(`Review Service Listening on ${PORT}`);
 });
 
+/*
+
+const parseMeta = (charObj) => {
+  var characteristics = [];
+  for (let key in charObj) {
+    characteristics.push({
+      ...charObj[key],
+      description: key,
+    })
+  }
+  return characteristics;
+}
 
 //-------------- TEST TO BE MOVED TO JEST TESTS--------------//
 
 const { ReviewMetas, Reviews } = require('./db/schemas.js');
-const testReviews = require('../reviews.example.js')
-const testMeta = require('../reviewMeta.example.js')
+const testReviews = require('../legacyAPI_examples/reviews.example.js')
+const testMeta = require('../legacyAPI_examples/reviewMeta.example.js')
 const characteristics = parseMeta(testMeta.characteristics);
 testMeta.characteristics = characteristics;
 
@@ -73,4 +75,4 @@ async function test() {
   }
 }
 
-
+*/

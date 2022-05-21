@@ -2,22 +2,29 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const reviewModelName = 'Reviews';
 const metaModelName = 'ReviewMetas';
+const charDescName = 'characteristicsDescriptions';
 
 const photosSchema = new Schema({
   id: Number,
-  url: String, //valid URL
+  url: String,
 });
 
-// MAY CONVERT TO MODEL BASED ON AGGREGATION NEEDS
+const charactersticsDescriptionSchema = new Schema({
+  id: {
+    type: Number,
+    unique: true,
+  },
+  description: String,
+});
+
 const characteristicsSchema = new Schema({
-  id:  {
+  id: { // this will be used for inserstion (this is the caracterstics_id)
     type: Number,
     // unique: true, // To be tured back on when migrating
-    default: mongoose.Types.ObjectId(), // create a new one as a stand in!
+    default: mongoose.Types.ObjectId(),
   },
-  value: Number, // Average as a string (converted from string automatically)
-  numFeedback: Number, //Added field
-  description: String, //Added field
+  value: Number,
+  description:String, //This is purely here for the meta! posetd reviews will not have this value.
 });
 
 const reviewMeta = new Schema({
@@ -25,27 +32,30 @@ const reviewMeta = new Schema({
     type: Number,
     unique: true,
   },
+  dateUpdated: Date,
+  lastReviewDate: Date,
+
+  /***
+   * The Below are going to be updated intermittenly when
+   * `lastReviewDate` exceeds `dateUpdated`by X min when reading data.
+   */
   ratings: {
-    1: Number, //Number as a string (auto converted)
+    1: Number,
     2: Number,
     3: Number,
     4: Number,
     5: Number,
   },
   recommended: {
-    false: Number, //Number as a string
+    false: Number,
     true: Number,
   },
-  characteristics: [characteristicsSchema], // This may go away or become an aggreated table
-  results: [{
-    // to be populat()ed!
-    type: Schema.Types.ObjectId,
-    ref: reviewModelName,
-  }]
+  characteristics: [characteristicsSchema], //for compilation of the Meta, description needs to be looked up via ID...
+
 })
 
 const reviewSchema = new Schema({
-  review_id: {
+  id: {
     type: Number,
     unique: true,
   },
@@ -56,22 +66,25 @@ const reviewSchema = new Schema({
   response: String,
   body: String,
   date: {
-    type: Date, //Date String Z format
+    type: Date,
     default: new Date(),
   },
   reviewer_name: String,
+  reviewer_email: String,
   helpfulness: Number,
   photos: [photosSchema],
-  reported: Boolean, //Added feature
-  characteristics: [characteristicsSchema], //Added feature
+  reported: Boolean,
+  characteristics: [characteristicsSchema],
 })
 
 
 
 const ReviewMetas = mongoose.model(metaModelName, reviewMeta)
 const Reviews = mongoose.model(reviewModelName, reviewSchema)
+const CharDescs = mongoose.model(charDescName, charactersticsDescriptionSchema)
 
 module.exports = {
   ReviewMetas,
   Reviews,
+  CharDescs,
 };
