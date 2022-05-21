@@ -31,16 +31,24 @@ const connectDB = async () => {
       await mongoose.connect(`mongodb://localhost:27017/${databaseName}`);
       console.log('MongoDB connected!!');
 
+      await Reviews.collection.drop();
       await Reviews.init();
 
-      var counter = 0;
-      fs.createReadStream('/Users/Zhaowei/rpp34/elt_data_sdc/reviews.csv')
-        .pipe(csv())
+      var array = [];
+      var counter = 1;
+      const stream = fs.createReadStream('/Users/Zhaowei/rpp34/elt_data_sdc/reviews.csv')
+      stream.pipe(csv())
         .on('data', async (row) => {
           try{
-            await Reviews.create(row);
-            counter++;
-            console.log(counter);
+            array.push(row);
+            if (array.length === 10000) {
+              stream.pause();
+              console.log(10000*counter);
+              await Reviews.insertMany(array);
+              array = [];
+              counter++;
+              stream.resume();
+            }
           } catch (err) {
             console.log('Db Write failed', err);
           }
