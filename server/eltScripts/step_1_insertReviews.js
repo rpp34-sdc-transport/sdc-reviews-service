@@ -10,7 +10,11 @@ const connectDB = async () => {
     await mongoose.connect(`mongodb://localhost:27017/${databaseName}`);
     console.log('MongoDB connected!!');
 
-    // await Reviews.collection.drop();
+    // try {
+    //   await Reviews.collection.drop();
+    // } catch (e) {
+    //   console.log(e.message)
+    // }
     await Reviews.init();
 
     var array = [];
