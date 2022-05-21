@@ -43,17 +43,21 @@ const connectDB = async () => {
             array.push(row);
             if (array.length === 10000) {
               stream.pause();
-              console.log(10000*counter);
+              counter += 10000;
+              console.log(counter);
               await Reviews.insertMany(array);
               array = [];
-              counter++;
               stream.resume();
             }
           } catch (err) {
             console.log('Db Write failed', err);
           }
         })
-        .on('end', () => {
+        .on('end', async () => {
+          counter += array.length;
+          console.log(counter);
+          await Reviews.insertMany(array);
+          array=[];
           console.log('end of stream');
         });
 
