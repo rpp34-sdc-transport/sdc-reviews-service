@@ -49,6 +49,23 @@ const characteristicsSchema = new Schema({
   description: String, //This is purely here for the meta! posted reviews will not have this value.
 });
 
+const postELTCharSchema = new Schema ({
+  characteristic_id: {
+    type: Number,
+    required: true,
+  },
+  value: Number,
+  description: String, //This is purely here for the meta! posted reviews will not have this value.
+})
+
+const postELTPhotosSchema = new Schema({
+  id: {
+    type: Number,
+    default: new Date().getTime(),
+  },
+  url: String,
+});
+
 const reviewMeta = new Schema({
   product_id: {
     type: Number,
@@ -75,7 +92,7 @@ const reviewMeta = new Schema({
     false: Number,
     true: Number,
   },
-  characteristics: [characteristicsSchema], //for compilation of the Meta, description needs to be looked up via ID...
+  characteristics: [postELTCharSchema], //for compilation of the Meta, description needs to be looked up via ID...
 
 })
 
@@ -100,9 +117,9 @@ const reviewSchema = new Schema({
   reviewer_name: String,
   reviewer_email: String,
   helpfulness: Number,
-  photos: [photosSchema],
+  photos: [postELTPhotosSchema],
   reported: Boolean,
-  characteristics: [characteristicsSchema],
+  characteristics: [postELTCharSchema],
 })
 
 

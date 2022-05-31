@@ -9,6 +9,7 @@
     "review-testbed": "node server/eltScripts/InsertReviews_1_testBed.js",
     "sync-index": "node server/importDb/syncModels.js",
     "import": "sh extractedData/import.sh",
+    "transform": "node server/importDb/transform.js",
     "test": "jest"
   },
   "repository": {
