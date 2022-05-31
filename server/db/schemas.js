@@ -1,14 +1,16 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const reviewModelName = 'Reviews';
-const metaModelName = 'ReviewMetas';
-const charDescName = 'CharacteristicsDescriptions';
-const photosName = 'ReviewPhotos';
-const characterName = 'Reviewcharacterstics';
+const reviewModelName = 'reviews';
+const metaModelName = 'review_metas';
+const charDescModelName = 'characteristics_descriptions';
+const photosModelName = 'review_photos';
+const characterModelName = 'review_characterstics';
 
 
 const photosSchema = new Schema({
-  id: Number,
+  id: {
+    type: Number,
+  },
   review_id: {
     type: Number,
     required: true,
@@ -20,9 +22,14 @@ const photosSchema = new Schema({
 const characteristicsDescriptionSchema = new Schema({
   id: {
     type: Number,
-    unique: true,
+    index: true,
   },
-  description: String,
+  product_id: {
+    type: Number,
+    required: true,
+    index: true,
+  },
+  name: String,
 });
 
 const characteristicsSchema = new Schema({
@@ -39,15 +46,18 @@ const characteristicsSchema = new Schema({
   },
 
   value: Number,
-  description:String, //This is purely here for the meta! posted reviews will not have this value.
+  description: String, //This is purely here for the meta! posted reviews will not have this value.
 });
 
 const reviewMeta = new Schema({
   product_id: {
     type: Number,
-    unique: true,
+    index: true,
   },
-  dateUpdated: Date,
+  dateUpdated: {
+    type: Date,
+    default: new Date(),
+  },
   lastReviewDate: Date,
 
   /***
@@ -72,9 +82,12 @@ const reviewMeta = new Schema({
 const reviewSchema = new Schema({
   id: {
     type: Number,
-    unique: true,
+    index: true,
   },
-  product_id: Number,
+  product_id: {
+    type: Number,
+    index: true,
+  },
   rating: Number,
   summary: String,
   recommend: Boolean,
@@ -94,11 +107,11 @@ const reviewSchema = new Schema({
 
 
 
-const ReviewMetas = mongoose.model(metaModelName, reviewMeta)
-const Reviews = mongoose.model(reviewModelName, reviewSchema)
-const CharDescs = mongoose.model(charDescName, characteristicsDescriptionSchema)
-const Photos = mongoose.model(photosName, photosSchema);
-const Characters = mongoose.model(characterName, characteristicsSchema)
+const ReviewMetas = mongoose.model(metaModelName, reviewMeta, metaModelName)
+const Reviews = mongoose.model(reviewModelName, reviewSchema, reviewModelName)
+const CharDescs = mongoose.model(charDescModelName, characteristicsDescriptionSchema, charDescModelName)
+const Photos = mongoose.model(photosModelName, photosSchema, photosModelName);
+const Characters = mongoose.model(characterModelName, characteristicsSchema, characterModelName)
 
 module.exports = {
   ReviewMetas,
