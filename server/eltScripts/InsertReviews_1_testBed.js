@@ -28,7 +28,7 @@ const connectDB = async () => {
           array.push(row);
           console.log(`Array RunSize: ${array.length}`)
           if (array.length === 50) {
-            stream.pause();
+            await stream.pause(); // This Await is important as this actually waits for the stream to pause.
             // counter += 10000;
             console.log(`**************** Array Size PRE INSERT: ${array.length}`)
             await Reviews.insertMany(array);
