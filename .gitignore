@@ -3,3 +3,4 @@ node_modules/
 test_coverage/
 *.DS_Store
 extractedData/*.csv
+extractedData/*.json

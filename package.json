@@ -10,7 +10,8 @@
     "sync-index": "node server/importDb/syncModels.js",
     "import": "sh extractedData/import.sh",
     "transform": "node server/importDb/transform.js",
-    "test": "jest"
+    "test": "jest",
+    "export": "sh exportDb.sh"
   },
   "repository": {
     "type": "git",
