@@ -11,7 +11,7 @@
     "import": "sh extractedData/import.sh",
     "transform": "node server/importDb/transform.js",
     "test": "jest",
-    "export": "sh exportDb.sh"
+    "export": "sh extractedData/exportDb.sh"
   },
   "repository": {
     "type": "git",
