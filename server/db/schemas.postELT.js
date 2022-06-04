@@ -95,7 +95,7 @@ const reviewMeta = new Schema({
 })
 
 const reviewSchema = new Schema({
-  id: {
+  review_id: {
     type: Number,
     index: true,
   },

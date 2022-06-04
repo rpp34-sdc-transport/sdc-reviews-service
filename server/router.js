@@ -57,7 +57,7 @@ router.get('/', async (req, res) => {
 
   try {
     response.results = await Reviews.find({ product_id })
-      .limit(count).sort(sortOptions[sort]).select({'review_id':'$id'}).select(excludeFeilds);
+      .limit(count).sort(sortOptions[sort]).select(excludeFeilds);
     res.status(200);
     res.send(response);
   } catch (err) {
