@@ -10,7 +10,7 @@ const {
 } = require('./db/schemas.js');
 
 var idParser = (id) => {
-  var parsed = Number(id) ;
+  var parsed = Number(id);
   if (isNaN(parsed)) {
     return false;
   }
@@ -19,23 +19,27 @@ var idParser = (id) => {
 
 //ROUTES
 
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   // Default Constants
   const defaultCount = 5;
   const defaultSort = 'helpful';
   const sortOptions = {
-    'helpful': true,
-    'newest': true,
-    'relevant': true
+    'helpful': { 'helpfulness': -1 },
+    'newest': { 'date': -1 },
+    'relevant': { 'helpfulness': -1 }
+  }
+  const feilds = {
+    _id: 0,
+    reported: 0,
+    characteristics: 0,
   }
 
   // Checking for Valid Parameters
   var count = req.query.count > 0 ? req.query.count : defaultCount;
-  var sort = sortOptions[req.query.sort] ? req.query.sort : defaultSort;
+  var sort = sortOptions[req.query.sort] !== undefined ? req.query.sort : defaultSort;
   var product_id = idParser(req.query.product_id);
 
   // test for valid product_id which is key
-  console.log('product_id:', product_id);
   if (product_id === false) {
     res.status(422)
     res.send('Error: invalid product_id provided')
@@ -49,8 +53,17 @@ router.get('/', (req, res) => {
     results: []
   }
 
-  res.status(200);
-  res.send(response);
+  try {
+    response.results = await Reviews.find({ product_id })
+      .limit(count).sort(sortOptions[sort]).select(feilds);
+    res.status(200);
+    res.send(response);
+  } catch (err) {
+    console.log(err);
+    res.status(500);
+    res.send(err);
+  }
+
 });
 
 router.get('/meta', (req, res) => {
@@ -72,7 +85,7 @@ router.post('/', (req, res) => {
     res.send('Error: invalid product_id provided')
     return;
   }
-
+  // Set _id to id field.or generate a date number.... for new ids
   res.status(200);
   res.send('OK');
 });
