@@ -28,10 +28,12 @@ router.get('/', async (req, res) => {
     'newest': { 'date': -1 },
     'relevant': { 'helpfulness': -1 }
   }
-  const feilds = {
+  const excludeFeilds = {
     '_id': 0,
     'reported': 0,
     'characteristics': 0,
+    "__v": 0,
+    'photos._id': 0,
   }
 
   // Checking for Valid Parameters
@@ -55,7 +57,7 @@ router.get('/', async (req, res) => {
 
   try {
     response.results = await Reviews.find({ product_id })
-      .limit(count).sort(sortOptions[sort]).select(feilds);
+      .limit(count).sort(sortOptions[sort]).select({'review_id':'$id'}).select(excludeFeilds);
     res.status(200);
     res.send(response);
   } catch (err) {
