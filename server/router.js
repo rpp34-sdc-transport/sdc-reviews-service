@@ -29,9 +29,9 @@ router.get('/', async (req, res) => {
     'relevant': { 'helpfulness': -1 }
   }
   const feilds = {
-    _id: 0,
-    reported: 0,
-    characteristics: 0,
+    '_id': 0,
+    'reported': 0,
+    'characteristics': 0,
   }
 
   // Checking for Valid Parameters
@@ -61,7 +61,7 @@ router.get('/', async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500);
-    res.send(err);
+    res.send(err.message);
   }
 
 });
