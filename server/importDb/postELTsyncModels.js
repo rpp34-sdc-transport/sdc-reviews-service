@@ -21,6 +21,7 @@ const connectDB = async () => {
 
     await mongoose.syncIndexes();
     console.log('all collection indexes synced', Date());
+    await mongoose.connection.close();
 
   } catch (err) {
     console.log('Failed to connect to MongoDB', err);

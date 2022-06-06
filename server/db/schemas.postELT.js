@@ -64,7 +64,7 @@ const postELTPhotosSchema = new Schema({
   url: String,
 });
 
-const reviewMeta = new Schema({
+const reviewMetaSchema = new Schema({
   product_id: {
     type: Number,
     index: true,
@@ -90,7 +90,7 @@ const reviewMeta = new Schema({
     false: Number,
     true: Number,
   },
-  characteristics: [postELTCharSchema], //for compilation of the Meta, description needs to be looked up via ID...
+  characteristics: {}, //for compilation of the Meta, description needs to be looked up via ID...
 
 })
 
@@ -122,7 +122,7 @@ const reviewSchema = new Schema({
 
 
 
-const ReviewMetas = mongoose.model(metaModelName, reviewMeta, metaModelName)
+const ReviewMetas = mongoose.model(metaModelName, reviewMetaSchema, metaModelName)
 const Reviews = mongoose.model(reviewModelName, reviewSchema, reviewModelName)
 const CharDescs = mongoose.model(charDescModelName, characteristicsDescriptionSchema, charDescModelName)
 const Photos = mongoose.model(photosModelName, photosSchema, photosModelName);

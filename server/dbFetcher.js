@@ -3,7 +3,7 @@ const {
   ReviewMetas,
   Reviews,
   CharDescs,
-} = require('./db/schemas.js');
+} = require('./db/schemas.postELT.js');
 
 //---------------------- Helper Functions --------------------//
 
@@ -17,7 +17,7 @@ const idParser = (id) => {
     return false;
   }
   var parsed = Number(id);
-  console.log('parsed id:', parsed)
+  // console.log('parsed id:', parsed)
   if (isNaN(parsed) || parsed === 0) {
     return false;
   }
@@ -45,14 +45,26 @@ const compileReviews = async (product_id) => {
     Reviews.find({ product_id }).sort({ 'date': -1 }),
     CharDescs.find({ product_id }).select({ _id: 0, product_id: 0 })
   ]
+
+  // Fetching Data From DB
   try {
     let [reviewsPromise, charDescriptionPromise] = await Promise.allSettled(promises);
-    if (reviewsPromise.status !== 'fulfilled' || charDescriptionPromise.status !== 'fulfilled') {
-      throw 'Something can\'t be found';
+    if (reviewsPromise.status !== 'fulfilled') {
+      throw 'Reviews for Meta can\'t be found!';
+    }
+    if (charDescriptionPromise.status !== 'fulfilled') {
+      throw 'Characteristics Description for product can\'t be found!';
     }
     var reviews = reviewsPromise.value;
-    var charDescription = charDescriptionPromise.value;
-    console.log(reviews, charDescription);
+    var charDescriptions = charDescriptionPromise.value;
+
+    // Making a Look up table for ID to Description
+    let tempDecription = {};
+    for (let char of charDescriptions) {
+      tempDecription[char.id] = char.name;
+    }
+    charDescriptions = tempDecription;
+    // console.log(reviews);
   } catch (err) {
     return err;
   }
@@ -78,22 +90,36 @@ const compileReviews = async (product_id) => {
     characteristics: {},
   };
 
+  // Compiling data from reviews
+  let tempChar = {}; // temp object prior to final transformation
   for (let review of reviews) {
-    result.recommended[review.recommended]++;
+    result.recommended[review.recommend]++;
     result.ratings[review.rating]++;
     for (let character of review.characteristics) {
-      if (result.characteristics[character.characteristic_id] === undefined) {
-        result.characteristics[character.characteristic_id] = [character.value];
+      if (tempChar[character.characteristic_id] === undefined) {
+        tempChar[character.characteristic_id] = [character.value];
       } else {
-        result.characteristics[character.characteristic_id].push(character.value);
+        tempChar[character.characteristic_id].push(character.value);
       }
     }
   }
-  var characteristics_ids = Object.keys(result.characteristics);
-  console.log('Result Obj: ', result);
-  console.log('CharIDs to look up', characteristics_ids);
 
+  // Computing averages and formating the shape fo the data
+  var finalChar = {};
+  for (let id in tempChar) {
+    finalChar[charDescriptions[id]] = {
+      id: Number(id),
+      value: tempChar[id].reduce((a, b) => a + b, 0) / tempChar[id].length,
+    }
+  }
 
+  result.characteristics = finalChar;
+  ReviewMetas.create(result)
+    .then(() => {
+      console.log('Review Meta Save OK!');
+    }).catch((err) => {
+      console.log('Review Meta Save FAILED!', err.message);
+    });
   return result;
 }
 
@@ -154,30 +180,29 @@ const getReviewMeta = async (req, res) => {
   }
 
   const excludeFeilds = {
-
+    '_id': 0,
+    "__v": 0,
   }
 
   try {
-    var result = await ReviewMetas.findOne({ product_id });
+    var result = await ReviewMetas.findOne({ product_id }).select(excludeFeilds);
   } catch (err) {
     serverErr(err, res);
   }
-  console.log('ReviewMeta data:', result)
+  // console.log('ReviewMeta data:', result)
   // IF No results, then need to compile the results
-
-
   if (result === null || result?.dateUpdated < result?.lastReviewDate) {
     // Conditions that require a recompile
+    console.log('Review Meta Needs to be compiled.');
     try {
-      // crunch the list!!
       result = await compileReviews(product_id);
-
       res.status(200);
-      res.send('OK');
+      res.send(result);
     } catch (err) {
       serverErr(err, res);
     }
   } else {
+    console.log('Review Meta Found');
     res.status(200);
     res.send(result);
   }
