@@ -37,13 +37,63 @@ const serverErr = (err, res) => {
 
 /**
  * Complies ReviewMeta from an array of reviews
- * @param {reviewList[]} reviews array of reviews
+ * @param {Number} product_id array of reviews sorted by newest
  * @returns `ReviewMeta`
  */
-const compileReviews = (reviews) => {
-  var result = {
+const compileReviews = async (product_id) => {
+  let promises = [
+    Reviews.find({ product_id }).sort({ 'date': -1 }),
+    CharDescs.find({ product_id }).select({ _id: 0, product_id: 0 })
+  ]
+  try {
+    let [reviewsPromise, charDescriptionPromise] = await Promise.allSettled(promises);
+    if (reviewsPromise.status !== 'fulfilled' || charDescriptionPromise.status !== 'fulfilled') {
+      throw 'Something can\'t be found';
+    }
+    var reviews = reviewsPromise.value;
+    var charDescription = charDescriptionPromise.value;
+    console.log(reviews, charDescription);
+  } catch (err) {
+    return err;
+  }
 
+
+  // let reviews = await Reviews.find({ product_id }).sort({ 'date': -1 });
+  // console.log('Meta Reivews List:', reviews);
+
+  var result = {
+    product_id: product_id,
+    lastReviewDate: reviews[0].date,
+    recommended: {
+      false: 0,
+      true: 0,
+    },
+    ratings: {
+      1: 0,
+      2: 0,
+      3: 0,
+      4: 0,
+      5: 0,
+    },
+    characteristics: {},
   };
+
+  for (let review of reviews) {
+    result.recommended[review.recommended]++;
+    result.ratings[review.rating]++;
+    for (let character of review.characteristics) {
+      if (result.characteristics[character.characteristic_id] === undefined) {
+        result.characteristics[character.characteristic_id] = [character.value];
+      } else {
+        result.characteristics[character.characteristic_id].push(character.value);
+      }
+    }
+  }
+  var characteristics_ids = Object.keys(result.characteristics);
+  console.log('Result Obj: ', result);
+  console.log('CharIDs to look up', characteristics_ids);
+
+
   return result;
 }
 
@@ -108,31 +158,19 @@ const getReviewMeta = async (req, res) => {
   }
 
   try {
-    var result = await ReviewMetas.findOne({ product_id })
+    var result = await ReviewMetas.findOne({ product_id });
   } catch (err) {
     serverErr(err, res);
   }
-  // console.log('ReviewMeta data:', result)
+  console.log('ReviewMeta data:', result)
   // IF No results, then need to compile the results
 
 
-  if (result.length < 1) {
+  if (result === null || result?.dateUpdated < result?.lastReviewDate) {
+    // Conditions that require a recompile
     try {
-      let reviews = await Reviews.find({ product_id })
-      console.log('Meta Reivews List:', reviews);
       // crunch the list!!
-
-      res.status(200);
-      res.send('OK');
-    } catch (err) {
-      serverErr(err, res);
-    }
-  } else if (result?.dateUpdated < result?.lastReviewDate) {
-    // if last review exceeds the date updated.
-    try {
-      let reviews = await Reviews.find({ product_id })
-      console.log('Meta Reivews List:', reviews);
-      // crunch the list!!
+      result = await compileReviews(product_id);
 
       res.status(200);
       res.send('OK');
