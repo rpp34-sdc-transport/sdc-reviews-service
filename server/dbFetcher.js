@@ -69,10 +69,8 @@ const compileReviews = async (product_id) => {
     return err;
   }
 
-
   // let reviews = await Reviews.find({ product_id }).sort({ 'date': -1 });
   // console.log('Meta Reivews List:', reviews);
-
   var result = {
     product_id: product_id,
     lastReviewDate: reviews[0].date,
@@ -104,7 +102,7 @@ const compileReviews = async (product_id) => {
     }
   }
 
-  // Computing averages and formating the shape fo the data
+  // Computing averages and formating the shape of the data
   var finalChar = {};
   for (let id in tempChar) {
     finalChar[charDescriptions[id]] = {
