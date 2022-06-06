@@ -6,7 +6,12 @@
   "scripts": {
     "start": "node server/server.js",
     "server-dev": "npx nodemon server/server.js",
-    "test": "jest"
+    "review-testbed": "node server/eltScripts/InsertReviews_1_testBed.js",
+    "sync-index": "node server/importDb/syncModels.js",
+    "import": "sh extractedData/import.sh",
+    "transform": "node server/importDb/transform.js",
+    "test": "jest",
+    "export": "sh exportDb.sh"
   },
   "repository": {
     "type": "git",

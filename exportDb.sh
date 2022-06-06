@@ -1,0 +1,1 @@
+mongoexport --collection=reviews --db=atelierReviews --out=/Users/Zhaowei/rpp34/sdc-reviews-service/extractedData/transformed_reviews_backup.json

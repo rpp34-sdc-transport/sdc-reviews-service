@@ -1,38 +1,80 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const reviewModelName = 'Reviews';
-const metaModelName = 'ReviewMetas';
-const charDescName = 'characteristicsDescriptions';
+const reviewModelName = 'reviews';
+const metaModelName = 'review_metas';
+const charDescModelName = 'characteristics_descriptions';
+const photosModelName = 'review_photos';
+const characterModelName = 'review_characterstics';
+
 
 const photosSchema = new Schema({
-  id: Number,
+  id: {
+    type: Number,
+  },
+  review_id: {
+    type: Number,
+    required: true,
+    index: true,
+  },
   url: String,
 });
 
-const charactersticsDescriptionSchema = new Schema({
+const characteristicsDescriptionSchema = new Schema({
   id: {
     type: Number,
-    unique: true,
+    index: true,
   },
-  description: String,
+  product_id: {
+    type: Number,
+    required: true,
+    index: true,
+  },
+  name: String,
 });
 
 const characteristicsSchema = new Schema({
-  id: { // this will be used for inserstion (this is the caracterstics_id)
+  id: Number, //Relationship ID, this is getting dropped
+  review_id: {
     type: Number,
-    // unique: true, // To be tured back on when migrating
-    default: mongoose.Types.ObjectId(),
+    required: true,
+    index: true,
+  },
+  characteristic_id: {
+    type: Number,
+    required: true,
+    index: true,
+  },
+
+  value: Number,
+  description: String, //This is purely here for the meta! posted reviews will not have this value.
+});
+
+const postELTCharSchema = new Schema ({
+  characteristic_id: {
+    type: Number,
+    required: true,
   },
   value: Number,
-  description:String, //This is purely here for the meta! posetd reviews will not have this value.
+  description: String, //This is purely here for the meta! posted reviews will not have this value.
+})
+
+const postELTPhotosSchema = new Schema({
+  id: {
+    type: Number,
+    default: new Date().getTime(),
+  },
+  url: String,
 });
 
 const reviewMeta = new Schema({
   product_id: {
     type: Number,
-    unique: true,
+    index: true,
   },
-  dateUpdated: Date,
+  dateUpdated: {
+    type: Date,
+    default: new Date(),
+  },
   lastReviewDate: Date,
 
   /***
@@ -50,16 +92,19 @@ const reviewMeta = new Schema({
     false: Number,
     true: Number,
   },
-  characteristics: [characteristicsSchema], //for compilation of the Meta, description needs to be looked up via ID...
+  characteristics: [postELTCharSchema], //for compilation of the Meta, description needs to be looked up via ID...
 
 })
 
 const reviewSchema = new Schema({
   id: {
     type: Number,
-    unique: true,
+    index: true,
   },
-  product_id: Number,
+  product_id: {
+    type: Number,
+    index: true,
+  },
   rating: Number,
   summary: String,
   recommend: Boolean,
@@ -72,19 +117,23 @@ const reviewSchema = new Schema({
   reviewer_name: String,
   reviewer_email: String,
   helpfulness: Number,
-  photos: [photosSchema],
+  photos: [postELTPhotosSchema],
   reported: Boolean,
-  characteristics: [characteristicsSchema],
+  characteristics: [postELTCharSchema],
 })
 
 
 
-const ReviewMetas = mongoose.model(metaModelName, reviewMeta)
-const Reviews = mongoose.model(reviewModelName, reviewSchema)
-const CharDescs = mongoose.model(charDescName, charactersticsDescriptionSchema)
+const ReviewMetas = mongoose.model(metaModelName, reviewMeta, metaModelName)
+const Reviews = mongoose.model(reviewModelName, reviewSchema, reviewModelName)
+const CharDescs = mongoose.model(charDescModelName, characteristicsDescriptionSchema, charDescModelName)
+const Photos = mongoose.model(photosModelName, photosSchema, photosModelName);
+const Characters = mongoose.model(characterModelName, characteristicsSchema, characterModelName)
 
 module.exports = {
   ReviewMetas,
   Reviews,
   CharDescs,
+  Photos,
+  Characters,
 };
