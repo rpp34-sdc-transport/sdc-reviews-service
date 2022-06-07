@@ -162,7 +162,7 @@ const getReviews = async (req, res) => {
 
   try {
     response.results = await Reviews.find({ product_id })
-      .limit(count).sort(sortOptions[sort]).select(excludeFeilds);
+      .sort(sortOptions[sort]).limit(count).select(excludeFeilds);
     res.status(200);
     res.send(response);
   } catch (err) {
@@ -229,8 +229,6 @@ const putHelpfulReview = async (req, res) => {
     res.send('Error: invalid review_id provided')
     return;
   }
-
-
   res.status(204);
   res.send('OK');
 }
