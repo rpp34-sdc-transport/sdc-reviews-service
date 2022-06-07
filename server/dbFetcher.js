@@ -2,125 +2,15 @@ require('./db/db.js');
 const {
   ReviewMetas,
   Reviews,
-  CharDescs,
   ReviewIncrementer,
 } = require('./db/schemas.postELT.js');
 
-//---------------------- Helper Functions --------------------//
-
-/**
- * Parses the id to a Number type and determine valid input
- * @param {string} id as a string
- * @returns id as a `number` or `false` if the id is invalid
- */
-const idParser = (id) => {
-  if (id.length === 0) {
-    return false;
-  }
-  var parsed = Number(id);
-  // console.log('parsed id:', parsed)
-  if (isNaN(parsed) || parsed === 0) {
-    return false;
-  }
-  return parseInt(id, 10);
-}
-
-/**
- * Simply send and logs erros from db queries
- * @param {errObject} err
- * @param {requestObject} res
- */
-const serverErr = (err, res) => {
-  console.log(err);
-  res.status(500);
-  res.send(err.message);
-}
-
-/**
- * Complies ReviewMeta from an array of reviews
- * @param {Number} product_id array of reviews sorted by newest
- * @returns `ReviewMeta`
- */
-const compileReviews = async (product_id) => {
-  let promises = [
-    Reviews.find({ product_id }).sort({ 'date': -1 }),
-    CharDescs.find({ product_id }).select({ _id: 0, product_id: 0 })
-  ]
-
-  // Fetching Data From DB
-  try {
-    let [reviewsPromise, charDescriptionPromise] = await Promise.allSettled(promises);
-    if (reviewsPromise.status !== 'fulfilled') {
-      throw 'Reviews for Meta can\'t be found!';
-    }
-    if (charDescriptionPromise.status !== 'fulfilled') {
-      throw 'Characteristics Description for product can\'t be found!';
-    }
-    var reviews = reviewsPromise.value;
-    var charDescriptions = charDescriptionPromise.value;
-
-    // Making a Look up table for ID to Description
-    let tempDecription = {};
-    for (let char of charDescriptions) {
-      tempDecription[char.id] = char.name;
-    }
-    charDescriptions = tempDecription;
-    // console.log(reviews);
-  } catch (err) {
-    return err;
-  }
-
-  // let reviews = await Reviews.find({ product_id }).sort({ 'date': -1 });
-  // console.log('Meta Reivews List:', reviews);
-  var result = {
-    product_id: product_id,
-    lastReviewDate: reviews[0].date,
-    recommended: {
-      false: 0,
-      true: 0,
-    },
-    ratings: {
-      1: 0,
-      2: 0,
-      3: 0,
-      4: 0,
-      5: 0,
-    },
-    characteristics: {},
-  };
-
-  // Compiling data from reviews
-  let tempChar = {}; // temp object prior to final transformation
-  for (let review of reviews) {
-    result.recommended[review.recommend]++;
-    result.ratings[review.rating]++;
-    for (let character of review.characteristics) {
-      if (tempChar[character.characteristic_id] === undefined) {
-        tempChar[character.characteristic_id] = [character.value];
-      } else {
-        tempChar[character.characteristic_id].push(character.value);
-      }
-    }
-  }
-
-  // Computing averages and formating the shape of the data
-  var finalChar = {};
-  for (let id in tempChar) {
-    finalChar[charDescriptions[id]] = {
-      id: Number(id),
-      value: tempChar[id].reduce((a, b) => a + b, 0) / tempChar[id].length,
-    }
-  }
-
-  result.characteristics = finalChar;
-  ReviewMetas.create(result)
-    .then(() => {
-      console.log('Review Meta Save OK!');
-    }).catch((err) => {
-      console.log('Review Meta Save FAILED!', err.message);
-    });
-  return result;
-}
+const {
+  idParser,
+  serverErr,
+  compileReviews,
+  parseReview,
+} = require('./deFetchHelpers.js');
 
 //------------------- Mongoose Functions -----------------//
 
@@ -214,10 +104,31 @@ const postReview = async (req, res) => {
     res.send('Error: invalid product_id provided')
     return;
   }
-  // Set _id to id field.or generate a date number.... for new ids
-  // also need to update metas if exists!!
-  res.status(200);
-  res.send('OK');
+
+  // Parse the review for validation:
+  // console.log('Review Preview', req.body)
+  var parsedReview = parseReview(req.body);
+  if (parsedReview === false) {
+    serverErr({ message: 'Invalid Body In review' }, res);
+    return;
+  }
+  try {
+    var { review_id } = await ReviewIncrementer.findOneAndUpdate({}, { $inc: { review_id: 1 } });
+    parsedReview.review_id = review_id;
+    var newReview = await Reviews.create(parsedReview);
+
+    // also need to update metas if exists!!
+    var status = await ReviewMetas.findOneAndUpdate({ product_id}, {lastReviewDate: newReview.date});
+    if (status === null) {
+      console.log('ReviewMeta was not compiled for this Product');
+    }
+    res.status(200);
+    res.send('OK');
+  } catch (err) {
+    serverErr(err, res);
+    return;
+  }
+
 }
 
 const putHelpfulReview = async (req, res) => {

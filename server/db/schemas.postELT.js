@@ -103,6 +103,7 @@ const reviewSchema = new Schema({
   product_id: {
     type: Number,
     index: true,
+    required: true,
   },
   rating: Number,
   summary: String,

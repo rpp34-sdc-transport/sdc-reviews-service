@@ -35,6 +35,12 @@ const connectDB = async () => {
     var incrementer = await ReviewIncrementer.create({ review_id: review_id + 1 });
     console.log('Next reivew_id will be', incrementer.review_id);
 
+    // TESTING for incrementing one
+    // var new_id = await ReviewIncrementer.findOneAndUpdate({}, { $inc: { review_id: 1 } });
+    // console.log('next review_id will have: ',new_id.review_id);
+    // var next_id = await ReviewIncrementer.findOne();
+    // console.log('Updated id in DB', next_id.review_id);
+
     console.log('all collection indexes synced', Date());
 
   } catch (err) {

@@ -3,17 +3,16 @@ const mongoose = require('../server/db/db.js');
 const {
   ReviewMetas,
   Reviews,
-  CharDescs
+  CharDescs,
+  ReviewIncrementer,
 } = require('../server/db/schemas.js');
 
 beforeAll(() => {
   return mongoose;
 })
 
-
 afterAll(async () => {
-  await mongoose.connection.close();
-  return;
+  return await mongoose.connection.close();
 });
 
 describe('Reviews Collection', () => {
@@ -67,3 +66,4 @@ describe('Reviews Meta Collection', () => {
 
 
 });
+
