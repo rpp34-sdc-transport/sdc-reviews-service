@@ -5,7 +5,7 @@ const metaModelName = 'review_metas';
 const charDescModelName = 'characteristics_descriptions';
 const photosModelName = 'review_photos';
 const characterModelName = 'review_characterstics';
-
+const reviewIncrementModelName = 'review_incrementer';
 
 const photosSchema = new Schema({
   id: {
@@ -47,7 +47,7 @@ const characteristicsSchema = new Schema({
   description: String, //This is purely here for the meta! posted reviews will not have this value.
 });
 
-const postELTCharSchema = new Schema ({
+const postELTCharSchema = new Schema({
   characteristic_id: {
     type: Number,
     required: true,
@@ -120,13 +120,16 @@ const reviewSchema = new Schema({
   characteristics: [postELTCharSchema],
 })
 
+const reviewIncrementerSchema = new Schema({
+  review_id: Number
+}, { capped: { size: 4096, max: 1 } });
 
-
-const ReviewMetas = mongoose.model(metaModelName, reviewMetaSchema, metaModelName)
-const Reviews = mongoose.model(reviewModelName, reviewSchema, reviewModelName)
-const CharDescs = mongoose.model(charDescModelName, characteristicsDescriptionSchema, charDescModelName)
+const ReviewMetas = mongoose.model(metaModelName, reviewMetaSchema, metaModelName);
+const Reviews = mongoose.model(reviewModelName, reviewSchema, reviewModelName);
+const CharDescs = mongoose.model(charDescModelName, characteristicsDescriptionSchema, charDescModelName);
 const Photos = mongoose.model(photosModelName, photosSchema, photosModelName);
-const Characters = mongoose.model(characterModelName, characteristicsSchema, characterModelName)
+const Characters = mongoose.model(characterModelName, characteristicsSchema, characterModelName);
+const ReviewIncrementer = mongoose.model(reviewIncrementModelName, reviewIncrementerSchema, reviewIncrementModelName);
 
 module.exports = {
   ReviewMetas,
@@ -134,4 +137,5 @@ module.exports = {
   CharDescs,
   Photos,
   Characters,
+  ReviewIncrementer,
 };

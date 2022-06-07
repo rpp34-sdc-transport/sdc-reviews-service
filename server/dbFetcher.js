@@ -3,6 +3,7 @@ const {
   ReviewMetas,
   Reviews,
   CharDescs,
+  ReviewIncrementer,
 } = require('./db/schemas.postELT.js');
 
 //---------------------- Helper Functions --------------------//
@@ -228,6 +229,7 @@ const putHelpfulReview = async (req, res) => {
     res.send('Error: invalid review_id provided')
     return;
   }
+
 
   res.status(204);
   res.send('OK');
