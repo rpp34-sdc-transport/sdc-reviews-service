@@ -51,7 +51,7 @@ const getReviews = async (req, res) => {
   }
 
   try {
-    response.results = await Reviews.find({ product_id })
+    response.results = await Reviews.find({ product_id, reported: false })
       .sort(sortOptions[sort]).limit(count).select(excludeFeilds);
     res.status(200);
     res.send(response);
@@ -140,7 +140,7 @@ const putHelpfulReview = async (req, res) => {
     return;
   }
   try {
-    let review =await Reviews.findOneAndUpdate({ review_id }, { $inc: { helpfulness: 1 } }, { new: true });
+    let review = await Reviews.findOneAndUpdate({ review_id }, { $inc: { helpfulness: 1 } }, { new: true });
     console.log('Helpfulness: ', review.helpfulness);
     res.status(204);
     res.send('OK');
@@ -158,9 +158,14 @@ const putReportReview = async (req, res) => {
     res.send('Error: invalid review_id provided')
     return;
   }
-
-  res.status(204);
-  res.send('OK');
+  try {
+    let review = await Reviews.findOneAndUpdate({ review_id }, { reported: true }, { new: true });
+    console.log('Reported: ', review.reported);
+    res.status(204);
+    res.send('OK');
+  } catch (err) {
+    serverErr(err, res);
+  }
 }
 
 module.exports = {

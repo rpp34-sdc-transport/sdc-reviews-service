@@ -54,7 +54,7 @@ const postELTCharSchema = new Schema({
   },
   value: Number,
   description: String, //This is purely here for the meta! posted reviews will not have this value.
-})
+});
 
 const postELTPhotosSchema = new Schema({
   id: {
@@ -92,7 +92,7 @@ const reviewMetaSchema = new Schema({
   },
   characteristics: {}, //for compilation of the Meta, description needs to be looked up via ID...
 
-})
+});
 
 const reviewSchema = new Schema({
   review_id: {
@@ -120,7 +120,7 @@ const reviewSchema = new Schema({
   photos: [postELTPhotosSchema],
   reported: Boolean,
   characteristics: [postELTCharSchema],
-})
+});
 
 const reviewIncrementerSchema = new Schema({
   review_id: Number
