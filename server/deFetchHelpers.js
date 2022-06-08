@@ -24,13 +24,14 @@ const idParser = (id) => {
 }
 
 /**
- * Simply send and logs erros from db queries
- * @param {errObject} err
- * @param {requestObject} res
+ * Logs errors in the form of err.message and send status code and error back to the `res` object.
+ * @param {Object} err `{message: 'Error Message'}`
+ * @param {Object} res reference to the request object to send
+ * @param {int} code html code default = `500`
  */
-const serverErr = (err, res) => {
+const serverErr = (err, res, code = 500) => {
   console.log(err);
-  res.status(500);
+  res.status(code);
   res.send(err.message);
 }
 
@@ -49,10 +50,10 @@ const compileReviews = async (product_id) => {
   try {
     let [reviewsPromise, charDescriptionPromise] = await Promise.allSettled(promises);
     if (reviewsPromise.status !== 'fulfilled') {
-      throw 'Reviews for Meta can\'t be found!';
+      throw {message: 'Reviews for Meta can\'t be found!'};
     }
     if (charDescriptionPromise.status !== 'fulfilled') {
-      throw 'Characteristics Description for product can\'t be found!';
+      throw {message: 'Characteristics Description for product can\'t be found!'};
     }
     var reviews = reviewsPromise.value;
     var charDescriptions = charDescriptionPromise.value;
@@ -119,7 +120,7 @@ const compileReviews = async (product_id) => {
     // will have to test if this error throwing will cascade all the way to the top!
     // and test if the error code is executed.
     console.log('Review Meta Save FAILED!', err.message);
-    throw err.message;
+    return err;
   }
 }
 

@@ -109,7 +109,7 @@ const postReview = async (req, res) => {
   // console.log('Review Preview', req.body)
   var parsedReview = parseReview(req.body);
   if (parsedReview === false) {
-    serverErr({ message: 'Invalid Body In review' }, res);
+    serverErr({ message: 'Invalid Body In review' }, res, 422);
     return;
   }
   try {
@@ -118,7 +118,7 @@ const postReview = async (req, res) => {
     var newReview = await Reviews.create(parsedReview);
 
     // also need to update metas if exists!!
-    var status = await ReviewMetas.findOneAndUpdate({ product_id}, {lastReviewDate: newReview.date});
+    var status = await ReviewMetas.findOneAndUpdate({ product_id }, { lastReviewDate: newReview.date });
     if (status === null) {
       console.log('ReviewMeta was not compiled for this Product');
     }
@@ -126,7 +126,6 @@ const postReview = async (req, res) => {
     res.send('OK');
   } catch (err) {
     serverErr(err, res);
-    return;
   }
 
 }
@@ -140,8 +139,14 @@ const putHelpfulReview = async (req, res) => {
     res.send('Error: invalid review_id provided')
     return;
   }
-  res.status(204);
-  res.send('OK');
+  try {
+    let review =await Reviews.findOneAndUpdate({ review_id }, { $inc: { helpfulness: 1 } }, { new: true });
+    console.log('Helpfulness: ', review.helpfulness);
+    res.status(204);
+    res.send('OK');
+  } catch (err) {
+    serverErr(err, res);
+  }
 }
 
 const putReportReview = async (req, res) => {
