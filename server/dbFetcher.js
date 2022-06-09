@@ -51,7 +51,7 @@ const getReviews = async (req, res) => {
   }
 
   try {
-    response.results = await Reviews.find({ product_id, reported: false })
+    response.results = await Reviews.find({ product_id, reported: { $ne: true } })
       .sort(sortOptions[sort]).limit(count).select(excludeFeilds);
     res.status(200);
     res.send(response);
@@ -116,6 +116,7 @@ const postReview = async (req, res) => {
     var { review_id } = await ReviewIncrementer.findOneAndUpdate({}, { $inc: { review_id: 1 } });
     parsedReview.review_id = review_id;
     var newReview = await Reviews.create(parsedReview);
+    console.log('Posted Review', newReview);
 
     // also need to update metas if exists!!
     // The Below lines of code (4 lines) needs to be moved after sending the status.
@@ -128,8 +129,9 @@ const postReview = async (req, res) => {
     }
     // ------------------
 
-    res.status(200);
-    res.send('OK');
+    res.status(201);
+    res.send('Created');
+    // apparently the frontEnd is looking for this to check a review is submitted successfully
   } catch (err) {
     serverErr(err, res);
   }

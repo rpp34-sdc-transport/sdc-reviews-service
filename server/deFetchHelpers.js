@@ -50,10 +50,10 @@ const compileReviews = async (product_id) => {
   try {
     let [reviewsPromise, charDescriptionPromise] = await Promise.allSettled(promises);
     if (reviewsPromise.status !== 'fulfilled') {
-      throw {message: 'Reviews for Meta can\'t be found!'};
+      throw { message: 'Reviews for Meta can\'t be found!' };
     }
     if (charDescriptionPromise.status !== 'fulfilled') {
-      throw {message: 'Characteristics Description for product can\'t be found!'};
+      throw { message: 'Characteristics Description for product can\'t be found!' };
     }
     var reviews = reviewsPromise.value;
     var charDescriptions = charDescriptionPromise.value;
@@ -157,6 +157,9 @@ const parseReview = (review) => {
   //   return false;
   // }
 
+  review.reviewer_name = review.name;
+  review.reviewer_email = review.email;
+
   if (typeof review.characteristics === 'object') {
     var characteristics = [];
     for (let id in review.characteristics) {
@@ -181,7 +184,14 @@ const parseReview = (review) => {
   // but need to validate here due to the schema enforcement
   if (review.photos.length < 1) {
     delete review.photos;
+  } else {
+    let photos = [];
+    for (let url of review.photos) {
+      photos.push({ url });
+    }
+    review.photos = photos;
   }
+
   return review;
 }
 

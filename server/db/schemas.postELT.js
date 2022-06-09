@@ -59,7 +59,7 @@ const postELTCharSchema = new Schema({
 const postELTPhotosSchema = new Schema({
   id: {
     type: Number,
-    default: new Date().getTime(),
+    default: Math.floor(Math.random() * new Date().getTime()),
   },
   url: String,
 });
@@ -107,7 +107,10 @@ const reviewSchema = new Schema({
   },
   rating: Number,
   summary: String,
-  recommend: Boolean,
+  recommend: {
+    type: Boolean,
+    default: true
+  },
   response: String,
   body: String,
   date: {
@@ -118,7 +121,10 @@ const reviewSchema = new Schema({
   reviewer_email: String,
   helpfulness: Number,
   photos: [postELTPhotosSchema],
-  reported: Boolean,
+  reported: {
+    type: Boolean,
+    default: false,
+  },
   characteristics: [postELTCharSchema],
 });
 
