@@ -118,10 +118,16 @@ const postReview = async (req, res) => {
     var newReview = await Reviews.create(parsedReview);
 
     // also need to update metas if exists!!
+    // The Below lines of code (4 lines) needs to be moved after sending the status.
+    // Since updating the Review Metas is not critical to returing the request.
+
+    // ------------------
     var status = await ReviewMetas.findOneAndUpdate({ product_id }, { lastReviewDate: newReview.date });
     if (status === null) {
       console.log('ReviewMeta was not compiled for this Product');
     }
+    // ------------------
+
     res.status(200);
     res.send('OK');
   } catch (err) {

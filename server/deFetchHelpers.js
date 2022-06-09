@@ -111,10 +111,15 @@ const compileReviews = async (product_id) => {
 
   result.characteristics = finalChar;
   try {
+    // Technically I can return the result regardless of the save,
+    // but this is for stresstesting purposes, and final code will have that
+    // statment moved after the return result
+
+    // ------------------
     await ReviewMetas.create(result);
-    // Technically i can return the result regardless of the save,
-    // but this is for stresstesting purposes.
     console.log('Review Meta Save OK!');
+    // ------------------
+
     return result;
   } catch (err) {
     // will have to test if this error throwing will cascade all the way to the top!
