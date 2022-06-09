@@ -157,6 +157,7 @@ const parseReview = (review) => {
   //   return false;
   // }
 
+  // Renaming fields to match request to the Db fields
   review.reviewer_name = review.name;
   review.reviewer_email = review.email;
 
