@@ -6,7 +6,7 @@ const {
   postReview,
   putHelpfulReview,
   putReportReview,
-} = require('./dbFetcher.js');
+} = require('./dbController.js');
 
 //------------------------- ROUTES ----------------------------------//
 router.get('/', getReviews);

@@ -10,7 +10,7 @@ const {
   serverErr,
   compileReviews,
   parseReview,
-} = require('./deFetchHelpers.js');
+} = require('./dbControllerUtils.js');
 
 //------------------- Mongoose Functions -----------------//
 
