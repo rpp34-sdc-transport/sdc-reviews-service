@@ -4,6 +4,7 @@ const {
   Reviews,
   CharDescs,
 } = require('../server/db/schemas.js');
+const axios = require('Axios');
 
 const productMax = 1000011;
 const productMin = Math.floor(productMax * 0.9);
@@ -58,39 +59,9 @@ afterAll(async () => {
   return await mongoose.connection.close();
 });
 
-//------------------------------ Product Reviews ----------------------------------//
-xdescribe('Times for Review Queries based on Product ID\'s should be <50 ms', () => {
-  var productList = [];
-  for (let i = 0; i < 50; i++) {
-    productList.push(randProduct());
-  }
-
-  test('Query Reviews for 50 product_id: Times', async () => {
-    let minTime = 10000000000000000000;
-    let maxTime = -1;
-    let counter = 0;
-    let totalTime = 0;
-    let results = [];
-    for (let product_id of productList) {
-      let [queryTime, numReviews] = await reviewQueryTime(product_id);
-      results.push([product_id, queryTime, numReviews]);
-      totalTime += queryTime;
-      counter++;
-      minTime = queryTime < minTime ? queryTime : minTime;
-      maxTime = queryTime > maxTime ? queryTime : maxTime;
-    }
-    let averageTime = totalTime / counter;
-    console.log(`Average Time: ${averageTime},  Min Time: ${minTime},  Max Time: ${maxTime}`);
-    console.log('Results: product_id / queryTime [ms] / NumReviews \n', results);
-    expect(averageTime).toBeLessThan(50);
-  });
-
-});
-
-
-
-//------------------------ Review Metas, Need Axios For Service!!! --------------------------//
-const axios = require('Axios');
+//*******************************************************************//
+//                          Helper Functions                         //
+//*******************************************************************//
 
 /**
  * Please ensure server is up and running first
@@ -100,16 +71,20 @@ const axios = require('Axios');
  */
 const metaConstuctTime = async (product_id, hostURL = 'http://localhost:3001') => {
   let start = Date.now();
+  let response = {};
   try {
-    var response = await axios({
+    response = await axios({
       method: 'get',
       url: `${hostURL}/reviews/meta?product_id=${product_id}`
     });
   } catch (err) {
-    console.log(err);
+    console.log(err.message);
+    response.status = err.response.status;
+    response.statusText = err.response.statusText;
   }
   let time = Date.now() - start;
-  return [time, response.status, response.statusText];
+  let result = response?.data?.ratings['1'] === undefined ? null : 'Created';
+  return [time, result];
 };
 
 const metaQueryTime = async (product_id) => {
@@ -124,7 +99,13 @@ const metaQueryTime = async (product_id) => {
   return [time, reviewMeta.length];
 };
 
-describe('Times for ReviewMetas Tests', () => {
+
+//*******************************************************************//
+//                          TEST SUITE                               //
+//*******************************************************************//
+
+// Each Test in a Describe block runs in serial only
+describe('Testing DB performance', () => {
   var productList = [];
   for (let i = 0; i < 50; i++) {
     productList.push(randProduct());
@@ -133,35 +114,54 @@ describe('Times for ReviewMetas Tests', () => {
   // Resets ReviewMetas Collection
   beforeAll(async () => {
     await ReviewMetas.collection.drop();
+    console.log('ReviewMetas Collection dropped')
     await ReviewMetas.init();
     return;
   });
 
-  test('Request Server to Return ReviewMetas', async () => {
-    let [averageTime, minTime, maxTime, results] = await queryStats(productList, metaConstuctTime);
-    console.log(`Average Time: ${averageTime},  Min Time: ${minTime},  Max Time: ${maxTime}`);
-    console.log('Results: product_id / queryTime [ms] / MetaReturned \n', results);
+  test('Request Server to Return ReviewMetas should be < 50 ms', async () => {
+    try {
+      var [averageTime, minTime, maxTime, results] = await queryStats(productList, metaConstuctTime);
+    } catch (err) {
+      console.log(err);
+    }
+    console.log(
+      'CONSTRUCTION TIME FOR Review Metas: Round Trip Time\n',
+      `Average Time: ${averageTime},  Min Time: ${minTime},  Max Time: ${maxTime}\n`,
+      'Results: product_id / request [ms] / MetaReturned \n',
+      results
+    );
+    expect(maxTime).toBeLessThan(50);
   });
 
 
-  test('Query ReviewMetas for 50 product ID Times', async () => {
-    let minTime = 10000000000000000000;
-    let maxTime = -1;
-    let counter = 0;
-    let totalTime = 0;
-    let results = [];
-    for (let product_id of productList) {
-      let [queryTime, MetaReturned] = await metaQueryTime(product_id);
-      results.push([product_id, queryTime, MetaReturned]);
-      totalTime += queryTime;
-      counter++;
-      minTime = queryTime < minTime ? queryTime : minTime;
-      maxTime = queryTime > maxTime ? queryTime : maxTime;
+  test('Query ReviewMetas by product_id\'s after creation should be < 50 ms', async () => {
+    try {
+      var [averageTime, minTime, maxTime, results] = await queryStats(productList, metaQueryTime);
+    } catch (err) {
+      console.log(err);
     }
-    let averageTime = totalTime / counter;
-    console.log(`Average Time: ${averageTime},  Min Time: ${minTime},  Max Time: ${maxTime}`);
-    console.log('Results: product_id / queryTime [ms] / MetaReturned \n', results);
-    expect(averageTime).toBeLessThan(50);
+    console.log(
+      'QEURY TIME FOR Review Metas\n',
+      `Average Time: ${averageTime},  Min Time: ${minTime},  Max Time: ${maxTime}\n`,
+      'Results: product_id / queryTime [ms] / MetaReturned \n',
+      results
+    );
+    expect(maxTime).toBeLessThan(50);
+  });
+
+  test('Query Reviews for 50 product_id with max time < 50 ms', async () => {
+    try {
+      var [averageTime, minTime, maxTime, results] = await queryStats(productList, reviewQueryTime)
+    } catch (err) {
+      console.log(err);
+    }
+    console.log('REVIEWS QUERY TIME by product_id\n',
+      `Average Time: ${averageTime},  Min Time: ${minTime},  Max Time: ${maxTime} \n`,
+      'Results: product_id / queryTime [ms] / NumReviews \n',
+      results);
+    expect(maxTime).toBeLessThan(50);
+
   });
 
 });

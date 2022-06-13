@@ -46,28 +46,25 @@ const compileReviews = async (product_id) => {
     CharDescs.find({ product_id }).select({ _id: 0, product_id: 0 })
   ]
 
-  // Fetching Data From DB
-  try {
-    let [reviewsPromise, charDescriptionPromise] = await Promise.allSettled(promises);
-    if (reviewsPromise.status !== 'fulfilled') {
-      throw { message: 'Reviews for Meta can\'t be found!' };
-    }
-    if (charDescriptionPromise.status !== 'fulfilled') {
-      throw { message: 'Characteristics Description for product can\'t be found!' };
-    }
-    var reviews = reviewsPromise.value;
-    var charDescriptions = charDescriptionPromise.value;
+  // Fetching Data From DB - errors will be cascaded up the call stack!
 
-    // Making a Look up table for ID to Description
-    let tempDecription = {};
-    for (let char of charDescriptions) {
-      tempDecription[char.id] = char.name;
-    }
-    charDescriptions = tempDecription;
-
-  } catch (err) {
-    return err;
+  let [reviewsPromise, charDescriptionPromise] = await Promise.allSettled(promises);
+  if (reviewsPromise.status !== 'fulfilled' || reviewsPromise.value.length < 1) {
+    throw 'Reviews for Meta can\'t be found!';
   }
+  if (charDescriptionPromise.status !== 'fulfilled' || charDescriptionPromise.value.length < 1) {
+    throw 'Characteristics Description for product can\'t be found!';
+  }
+  var reviews = reviewsPromise.value;
+  var charDescriptions = charDescriptionPromise.value;
+  // console.log('Compiling Reviews: ', reviews, charDescriptions);
+
+  // Making a Look up table for ID to Description
+  let tempDecription = {};
+  for (let char of charDescriptions) {
+    tempDecription[char.id] = char.name;
+  }
+  charDescriptions = tempDecription;
 
   var result = {
     product_id: product_id,

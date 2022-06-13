@@ -70,8 +70,16 @@ const getReviewMeta = async (req, res) => {
 
   const excludeFeilds = {
     '_id': 0,
-    "__v": 0,
+    '__v': 0,
+    'lastReviewDate': 0,
   }
+
+  var empty = {
+    product_id: product_id,
+    ratings: {},
+    recommended: {},
+    characteristics: {}
+  };
 
   try {
     var result = await ReviewMetas.findOne({ product_id }).select(excludeFeilds);
@@ -88,7 +96,9 @@ const getReviewMeta = async (req, res) => {
       res.status(200);
       res.send(result);
     } catch (err) {
-      serverErr(err, res);
+      //Results not found, send empty Data
+      res.status(200);
+      res.send(empty);
     }
   } else {
     console.log('Review Meta Found');
