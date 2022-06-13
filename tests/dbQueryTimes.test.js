@@ -9,6 +9,19 @@ const axios = require('Axios');
 const productMax = 1000011;
 const productMin = Math.floor(productMax * 0.9);
 
+beforeAll(() => {
+  return mongoose;
+});
+
+afterAll(async () => {
+  return await mongoose.connection.close();
+});
+
+//*******************************************************************//
+//                          Helper Functions                         //
+//*******************************************************************//
+
+
 const randProduct = () => {
   return Math.floor(Math.random() * (productMax - productMin) + productMin);
 };
@@ -17,6 +30,18 @@ const reviewQueryTime = async (product_id) => {
   let start = Date.now();
   try {
     var reviewList = await Reviews.find({ product_id });
+    // console.log('Product ID:',product_id, 'Number of reviews: ', reviewList.length);
+  } catch (err) {
+    console.log(err.message);
+  }
+  let time = Date.now() - start;
+  return [time, reviewList.length];
+};
+
+const charDescQueryTime = async (product_id) => {
+  let start = Date.now();
+  try {
+    var reviewList = await CharDescs.find({ product_id });
     // console.log('Product ID:',product_id, 'Number of reviews: ', reviewList.length);
   } catch (err) {
     console.log(err.message);
@@ -49,19 +74,6 @@ const queryStats = async (idList, asyncQueryCallBack) => {
 
   return [averageTime, minTime, maxTime, results];
 };
-
-
-beforeAll(() => {
-  return mongoose;
-});
-
-afterAll(async () => {
-  return await mongoose.connection.close();
-});
-
-//*******************************************************************//
-//                          Helper Functions                         //
-//*******************************************************************//
 
 /**
  * Please ensure server is up and running first
@@ -119,7 +131,7 @@ describe('Testing DB performance', () => {
     return;
   });
 
-  test('Request Server to Return ReviewMetas should be < 50 ms', async () => {
+  test('THIS IS A SERVER REQUEST: Return ReviewMetas max time should be < 50 ms', async () => {
     try {
       var [averageTime, minTime, maxTime, results] = await queryStats(productList, metaConstuctTime);
     } catch (err) {
@@ -133,7 +145,6 @@ describe('Testing DB performance', () => {
     );
     expect(maxTime).toBeLessThan(50);
   });
-
 
   test('Query ReviewMetas by product_id\'s after creation should be < 50 ms', async () => {
     try {
@@ -150,13 +161,35 @@ describe('Testing DB performance', () => {
     expect(maxTime).toBeLessThan(50);
   });
 
-  test('Query Reviews for 50 product_id with max time < 50 ms', async () => {
+  for (let i = 0; i < 50; i++) {
+    productList.push(randProduct());
+  }
+
+  test('Query Reviews by product_id\'s max time should be < 50 ms', async () => {
     try {
       var [averageTime, minTime, maxTime, results] = await queryStats(productList, reviewQueryTime)
     } catch (err) {
       console.log(err);
     }
     console.log('REVIEWS QUERY TIME by product_id\n',
+      `Average Time: ${averageTime},  Min Time: ${minTime},  Max Time: ${maxTime} \n`,
+      'Results: product_id / queryTime [ms] / NumReviews \n',
+      results);
+    expect(maxTime).toBeLessThan(50);
+
+  });
+
+  for (let i = 0; i < 50; i++) {
+    productList.push(randProduct());
+  }
+
+  test('Query Characteristics Description by product_id\'s max time should be < 50 ms', async () => {
+    try {
+      var [averageTime, minTime, maxTime, results] = await queryStats(productList, charDescQueryTime)
+    } catch (err) {
+      console.log(err);
+    }
+    console.log('Characteristics Description TIME by product_id\n',
       `Average Time: ${averageTime},  Min Time: ${minTime},  Max Time: ${maxTime} \n`,
       'Results: product_id / queryTime [ms] / NumReviews \n',
       results);
