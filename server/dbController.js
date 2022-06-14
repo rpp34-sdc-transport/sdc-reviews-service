@@ -90,7 +90,7 @@ const getReviewMeta = async (req, res) => {
   // IF No results, then need to compile the results
   if (result === null || result?.dateUpdated < result?.lastReviewDate) {
     // Conditions that require a recompile
-    console.log('Review Meta Needs to be compiled.');
+    // console.log('Review Meta Needs to be compiled.');
     try {
       result = await compileReviews(product_id);
       res.status(200);
@@ -101,7 +101,7 @@ const getReviewMeta = async (req, res) => {
       res.send(empty);
     }
   } else {
-    console.log('Review Meta Found');
+    // console.log('Review Meta Found');
     res.status(200);
     res.send(result);
   }
@@ -126,7 +126,7 @@ const postReview = async (req, res) => {
     var { review_id } = await ReviewIncrementer.findOneAndUpdate({}, { $inc: { review_id: 1 } });
     parsedReview.review_id = review_id;
     var newReview = await Reviews.create(parsedReview);
-    console.log('Posted Review', newReview);
+    // console.log('Posted Review', newReview);
 
     res.status(201);
     res.send('Created'); // apparently the frontEnd is looking for this to check a review is submitted successfully
@@ -134,7 +134,7 @@ const postReview = async (req, res) => {
     // also need to update metas if exists!!
     var status = await ReviewMetas.findOneAndUpdate({ product_id }, { lastReviewDate: newReview.date });
     if (status === null) {
-      console.log('ReviewMeta was not compiled for this Product');
+      // console.log('ReviewMeta was not compiled for this Product');
     }
   } catch (err) {
     serverErr(err, res);
@@ -144,7 +144,7 @@ const postReview = async (req, res) => {
 
 const putHelpfulReview = async (req, res) => {
   var review_id = idParser(req.params.review_id);
-  console.log('review_id:', review_id);
+  // console.log('review_id:', review_id);
 
   if (review_id === false) {
     res.status(422)
@@ -152,8 +152,9 @@ const putHelpfulReview = async (req, res) => {
     return;
   }
   try {
+    // eslint-disable-next-line no-unused-vars
     let review = await Reviews.findOneAndUpdate({ review_id }, { $inc: { helpfulness: 1 } }, { new: true });
-    console.log('Helpfulness: ', review.helpfulness);
+    // console.log('Helpfulness: ', review.helpfulness);
     res.status(204);
     res.send('OK');
   } catch (err) {
@@ -163,7 +164,7 @@ const putHelpfulReview = async (req, res) => {
 
 const putReportReview = async (req, res) => {
   var review_id = idParser(req.params.review_id);
-  console.log('review_id:', review_id);
+  // console.log('review_id:', review_id);
 
   if (review_id === false) {
     res.status(422)
@@ -171,8 +172,9 @@ const putReportReview = async (req, res) => {
     return;
   }
   try {
+    // eslint-disable-next-line no-unused-vars
     let review = await Reviews.findOneAndUpdate({ review_id }, { reported: true }, { new: true });
-    console.log('Reported: ', review.reported);
+    // console.log('Reported: ', review.reported);
     res.status(204);
     res.send('OK');
   } catch (err) {

@@ -114,14 +114,14 @@ const compileReviews = async (product_id) => {
 
     // *****************************************************
     await ReviewMetas.create(result);
-    console.log('Review Meta Save OK!');
+    // console.log('Review Meta Save OK!');
     // *****************************************************
 
     return result;
   } catch (err) {
     // will have to test if this error throwing will cascade all the way to the top!
     // and test if the error code is executed.
-    console.log('Review Meta Save FAILED!', err.message);
+    // console.log('Review Meta Save FAILED!', err.message);
     return err;
   }
 }
@@ -136,17 +136,17 @@ const parseReview = (review) => {
   const keys = ['rating', 'summary', 'body', 'recommend', 'name', 'email', 'characteristics', 'photos'];
   for (let key of keys) {
     if (review[key] === undefined) {
-      console.log('Failed Key Check: ', key);
+      // console.log('Failed Key Check: ', key);
       return false;
     }
   }
   review.rating = Number(review.rating);
   if (review.rating < 1 || review.rating > 5) {
-    console.log('Failed Rating Check: ', review.rating);
+    // console.log('Failed Rating Check: ', review.rating);
     return false;
   }
   if (typeof review.recommend !== 'boolean') {
-    console.log('Failed recommend Check: ', review.recommend)
+    // console.log('Failed recommend Check: ', review.recommend)
     return false;
   }
   // Need Regex for email!!!!
@@ -167,14 +167,14 @@ const parseReview = (review) => {
         value
       }
       if (value < 1 || value > 5) {
-        console.log('Failed Characteristics Value Check: ', value);
+        // console.log('Failed Characteristics Value Check: ', value);
         return false;
       }
       characteristics.push(character);
     }
     review.characteristics = characteristics;
   } else {
-    console.log('Failed Characteristics Check: ', review.characteristics);
+    // console.log('Failed Characteristics Check: ', review.characteristics);
     return false;
   }
 

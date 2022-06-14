@@ -6,9 +6,6 @@ const {
 } = require('../server/db/schemas.js');
 const axios = require('Axios');
 
-const productMax = 1000011;
-const productMin = Math.floor(productMax * 0.9);
-
 beforeAll(() => {
   return mongoose;
 });
@@ -21,7 +18,8 @@ afterAll(async () => {
 //                          Helper Functions                         //
 //*******************************************************************//
 
-
+const productMax = 1000011;
+const productMin = Math.floor(productMax * 0.9);
 const randProduct = () => {
   return Math.floor(Math.random() * (productMax - productMin) + productMin);
 };
@@ -79,7 +77,7 @@ const queryStats = async (idList, asyncQueryCallBack) => {
  * Please ensure server is up and running first
  * @param {Number} product_id
  * @param {String} hostURL URL for the localhost and port. Example: http://localhost:3001
- * @returns `[queryTime, response.status, response.statusText]`
+ * @returns `[queryTime, result]` - `result` is the end
  */
 const metaConstuctTime = async (product_id, hostURL = 'http://localhost:3001') => {
   let start = Date.now();
@@ -196,5 +194,4 @@ describe('Testing DB performance', () => {
     expect(maxTime).toBeLessThan(50);
 
   });
-
 });
