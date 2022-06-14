@@ -14,6 +14,7 @@ server.use(express.urlencoded({extended: true}));
  * @param {*} res
  * @param {*} next
  */
+ // eslint-disable-next-line no-unused-vars
  const logger = (req, res, next) => {
   console.log(`${req.method} ${req.url}`);
   if (Object.keys(req.params).length > 0) {
@@ -26,18 +27,13 @@ server.use(express.urlencoded({extended: true}));
     console.log('Request Body:', req.body);
   }
   next();
-}
-server.use(logger)
+};
 
-
+// server.use(logger)
 server.use('/reviews', router)
-
 server.get('/', (req, res) => {
   res.send('Hello Word, welcome to review service!');
 });
-
-
-
 
 server.listen(PORT, () => {
   console.log(`Review Service Listening on ${PORT}`);
