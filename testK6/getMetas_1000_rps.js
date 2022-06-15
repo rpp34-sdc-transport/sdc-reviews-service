@@ -20,13 +20,6 @@ const randProduct = () => {
   return Math.floor(Math.random() * (productMax - productMin) + productMin);
 };
 
-// var productList = [];
-// for (let i = 0; i < 1000; i++) {
-//   productList.push(randProduct());
-// }
-
-// var index = 0;
-
 export default function () {
   const res = http.get(`http://localhost:3001/reviews/meta?product_id=${randProduct()}`);
   check(res, {

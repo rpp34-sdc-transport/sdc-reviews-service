@@ -31,7 +31,7 @@ const connectDB = async () => {
     await mongoose.syncIndexes();
 
     var [{ review_id }] = await Reviews.find({}).sort({ _id: -1 }).limit(1); //returns an array
-    console.log('Last Inserted review_id', review_id);
+    console.log('Last Inserted review_id', review_id); // New Db Should be 5774952
     var incrementer = await ReviewIncrementer.create({ review_id: review_id + 1 });
     console.log('Next reivew_id will be', incrementer.review_id);
 

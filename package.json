@@ -8,7 +8,7 @@
     "server-dev": "npx nodemon server/server.js",
     "review-testbed": "node server/eltScripts/InsertReviews_1_testBed.js",
     "sync-index": "node server/importDb/syncModels.js",
-    "post-elt-sync": "node server/importDb/postELTsyncModels.js",
+    "post-elt-sync": "node server/importDb/syncModelsPOSTELT.js",
     "import": "sh extractedData/import.sh",
     "transform": "node server/importDb/transform.js",
     "test": "jest",

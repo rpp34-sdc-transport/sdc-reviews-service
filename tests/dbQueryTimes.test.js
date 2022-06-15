@@ -121,13 +121,13 @@ describe('Testing DB performance', () => {
     productList.push(randProduct());
   }
 
-  // Resets ReviewMetas Collection
-  beforeAll(async () => {
-    await ReviewMetas.collection.drop();
-    console.log('ReviewMetas Collection dropped')
-    await ReviewMetas.init();
-    return;
-  });
+  // Resets ReviewMetas Collection (enable to test build speed)
+  // beforeAll(async () => {
+  //   await ReviewMetas.collection.drop();
+  //   console.log('ReviewMetas Collection dropped')
+  //   await ReviewMetas.init();
+  //   return;
+  // });
 
   test('THIS IS A SERVER REQUEST: Return ReviewMetas max time should be < 50 ms', async () => {
     try {
