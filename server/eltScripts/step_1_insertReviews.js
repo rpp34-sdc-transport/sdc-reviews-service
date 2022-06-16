@@ -36,7 +36,7 @@ const connectDB = async () => {
              *  harware and other programs on the machine.
              * Can lead to program instability!!
             */
-            stream.pause();
+            stream.pause(); // Adding await here will wait for the steam to stop at the cost of time :)
             await Reviews.insertMany(array);
             counter += array.length;
             console.log(`${counter} rows`);
