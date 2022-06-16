@@ -3,10 +3,10 @@ import { check } from 'k6';
 
 export const options = {
   scenarios: {
-    postReviews_1000_rps: {
+    postReviews_100_rps: {
       executor: 'constant-arrival-rate',
       duration: '60s',
-      rate: 1000,
+      rate: 300,
       timeUnit: '1s',
       preAllocatedVUs: 2,
       maxVUs: 2500,
