@@ -3,7 +3,7 @@ require('dotenv').config();
 
 const router = require('./router.js');
 const server = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 server.use(express.json());
 server.use(express.urlencoded({extended: true}));
