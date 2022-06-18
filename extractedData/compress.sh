@@ -1,0 +1,3 @@
+gzip -c /Users/Zhaowei/rpp34/sdc-reviews-service/extractedData/backupsAndCompressed/backup_characteristics_descriptions.json > /Users/Zhaowei/rpp34/sdc-reviews-service/extractedData/backupsAndCompressed/compressed_characteristics.gz
+gzip -c /Users/Zhaowei/rpp34/sdc-reviews-service/extractedData/backupsAndCompressed/backup_review_metas.json > /Users/Zhaowei/rpp34/sdc-reviews-service/extractedData/backupsAndCompressed/compressed_review_metas.gz
+gzip -c /Users/Zhaowei/rpp34/sdc-reviews-service/extractedData/backupsAndCompressed/backup_transformed_reviews.json > /Users/Zhaowei/rpp34/sdc-reviews-service/extractedData/backupsAndCompressed/compressed_reviews.gz
