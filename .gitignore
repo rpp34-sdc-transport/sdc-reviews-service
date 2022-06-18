@@ -4,3 +4,5 @@ test_coverage/
 *.DS_Store
 extractedData/*.csv
 extractedData/*.json
+*.pem
+awsLogin.sh
