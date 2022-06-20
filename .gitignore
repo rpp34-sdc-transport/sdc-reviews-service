@@ -6,3 +6,5 @@ extractedData/*.csv
 extractedData/*.json
 *.pem
 awsLogin.sh
+extractedData/*
+upload2EC2.sh
