@@ -5,7 +5,7 @@ test_coverage/
 extractedData/*.csv
 extractedData/*.json
 *.pem
-awsLogin.sh
+awsLogin.sh=
+extractedData/*
+upload2EC2.sh
 uploads/
-*.sh
-
