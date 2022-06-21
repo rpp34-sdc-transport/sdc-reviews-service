@@ -4,7 +4,7 @@
   "description": "Delivers Review Data and Handles User Generated Content",
   "main": "server.js",
   "scripts": {
-    "start": "node server/server.js",
+    "start": "bash serverInit.sh",
     "server-dev": "npx nodemon server/server.js",
     "review-testbed": "node server/eltScripts/InsertReviews_1_testBed.js",
     "sync-index": "node server/importDb/syncModels.js",
