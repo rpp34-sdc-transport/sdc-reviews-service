@@ -3,7 +3,7 @@ const databaseName = 'atelierReviews';
 const {
   Reviews,
   ReviewIncrementer
-} = require('../db/schemas.postELT.js');
+} = require('../server/db/schemas.postELT.js');
 
 const connectDB = async () => {
   try {
