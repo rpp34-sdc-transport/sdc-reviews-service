@@ -13,7 +13,8 @@
     "transform": "node server/importDb/transform.js",
     "test": "jest",
     "export": "sh extractedData/exportDb.sh",
-    "aws" : "bash awsLogin.sh"
+    "aws" : "bash awsLogin.sh",
+    "db-cleanup": "node testK6/cleanUp.js"
   },
   "repository": {
     "type": "git",
