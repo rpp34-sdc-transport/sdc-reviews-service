@@ -9,3 +9,4 @@ awsLogin.sh=
 extractedData/*
 upload2EC2.sh
 uploads/
+awsLogin.sh
