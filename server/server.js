@@ -29,7 +29,7 @@ server.use(express.urlencoded({extended: true}));
   next();
 };
 
-server.use(logger)
+// server.use(logger)
 server.use('/reviews', router)
 server.get('/', (req, res) => {
   res.send('Hello Word, welcome to review service!');
