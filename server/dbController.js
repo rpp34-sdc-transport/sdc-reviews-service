@@ -153,7 +153,7 @@ const putHelpfulReview = async (req, res) => {
   }
   try {
     // eslint-disable-next-line no-unused-vars
-    let review = await Reviews.findOneAndUpdate({ review_id }, { $inc: { helpfulness: 1 } }, { new: true });
+    await Reviews.updateOne({ review_id }, { $inc: { helpfulness: 1 } });
     // console.log('Helpfulness: ', review.helpfulness);
     res.status(204);
     res.send('OK');
