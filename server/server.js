@@ -35,6 +35,10 @@ server.get('/', (req, res) => {
   res.send('Hello Word, welcome to review service!');
 });
 
+server.get('/loaderio-90e63fab73e9d8f102c56058467bea46*', (req, res) => {
+  res.send('loaderio-90e63fab73e9d8f102c56058467bea46');
+})
+
 server.listen(PORT, () => {
   console.log(`Review Service Listening on ${PORT}`);
 });
