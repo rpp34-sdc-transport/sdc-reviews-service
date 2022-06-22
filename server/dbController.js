@@ -132,10 +132,7 @@ const postReview = async (req, res) => {
     res.send('Created'); // apparently the frontEnd is looking for this to check a review is submitted successfully
 
     // also need to update metas if exists!!
-    var status = await ReviewMetas.findOneAndUpdate({ product_id }, { lastReviewDate: newReview.date });
-    if (status === null) {
-      // console.log('ReviewMeta was not compiled for this Product');
-    }
+    ReviewMetas.updateOne({ product_id }, { $set: { lastReviewDate: newReview.date } });
   } catch (err) {
     serverErr(err, res);
   }
