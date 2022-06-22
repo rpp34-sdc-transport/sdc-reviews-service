@@ -173,7 +173,7 @@ const putReportReview = async (req, res) => {
   }
   try {
     // eslint-disable-next-line no-unused-vars
-    await Reviews.updateOne({ review_id }, { reported: true });
+    await Reviews.updateOne({ review_id }, { $set: { reported: true } });
     // console.log('Reported: ', review.reported);
     res.status(204);
     res.send('OK');
