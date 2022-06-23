@@ -10,3 +10,4 @@ extractedData/*
 upload2EC2.sh
 uploads/
 awsLogin.sh
+dump/
