@@ -10,4 +10,5 @@ extractedData/*
 upload2EC2.sh
 uploads/
 awsLogin.sh
+CompleteMongodump/
 dump/
