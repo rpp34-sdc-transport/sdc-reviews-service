@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const databaseName = 'atelierReviews';
+require('dotenv').config();
+const databaseName = process.env.MONGO_DB;
 const {
   Reviews,
   ReviewIncrementer
@@ -7,7 +8,11 @@ const {
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(`mongodb://localhost:27017/${databaseName}`);
+    await mongoose.connect(`mongodb://${process.env.MONGO_USER}:${process.env.MONGO_TOKEN}@${process.env.MONGO_HOST}:27017/${databaseName}?authSource=${databaseName}`,
+      {},
+      () => console.log(`Connected to ${databaseName}`),
+      (err) => console.log(err)
+    );
     console.log('MongoDB connected!: Cleaning up After testing', Date());
 
     // Deleting added reviews
@@ -19,7 +24,7 @@ const connectDB = async () => {
 
     // set all reviews to not reported
     try {
-      await Reviews.updateMany({},{ $set: { reported: false }})
+      await Reviews.updateMany({}, { $set: { reported: false } })
     } catch (e) {
       console.log(e.message)
     }
