@@ -6,6 +6,8 @@ const {
   ReviewMetas,
   Reviews,
   CharDescs,
+  Photos,
+  Characters,
   ReviewIncrementer
 } = require('../db/schemas.postELT.js');
 
@@ -28,6 +30,8 @@ const connectDB = async () => {
       CharDescs.init(),
       ReviewMetas.init(),
       Reviews.init(),
+      Photos.init(),
+      Characters.init(),
       ReviewIncrementer.init(),
     ]);
     await mongoose.syncIndexes();
