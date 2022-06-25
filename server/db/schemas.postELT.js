@@ -115,15 +115,11 @@ const reviewSchema = new Schema({
   body: String,
   date: {
     type: Date,
-    default: new Date(),
-    index: true,
+    default: new Date()
   },
   reviewer_name: String,
   reviewer_email: String,
-  helpfulness: {
-    type: Number,
-    index: true,
-  },
+  helpfulness: Number,
   photos: [postELTPhotosSchema],
   reported: {
     type: Boolean,
