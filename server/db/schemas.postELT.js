@@ -120,7 +120,10 @@ const reviewSchema = new Schema({
   },
   reviewer_name: String,
   reviewer_email: String,
-  helpfulness: Number,
+  helpfulness: {
+    type: Number,
+    index: true,
+  },
   photos: [postELTPhotosSchema],
   reported: {
     type: Boolean,
