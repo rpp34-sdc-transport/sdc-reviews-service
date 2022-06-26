@@ -4,16 +4,15 @@
   "description": "Delivers Review Data and Handles User Generated Content",
   "main": "server.js",
   "scripts": {
-    "start": "bash initServer.sh",
+    "start": "bash bashScripts/initServer.sh",
     "server-dev": "npx nodemon server/server.js",
     "review-testbed": "node server/eltScripts/InsertReviews_1_testBed.js",
     "sync-index": "node server/importDb/syncModels.js",
     "post-elt-sync": "node server/importDb/syncModelsPOSTELT.js",
-    "import": "sh extractedData/import.sh",
+    "import": "bash bashScripts/import.sh",
     "transform": "node server/importDb/transform.js",
     "test": "jest",
-    "export": "sh extractedData/exportDb.sh",
-    "aws" : "bash awsServerLogin.sh",
+    "aws" : "bash bashScripts/awsServerLogin.sh",
     "db-cleanup": "node testK6/cleanUp.js"
   },
   "repository": {
