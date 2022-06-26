@@ -9,6 +9,6 @@ awsLogin.sh=
 extractedData/*
 upload2EC2.sh
 uploads/
-awsLogin.sh
+*Login.sh
 CompleteMongodump/
 dump/
