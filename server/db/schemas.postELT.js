@@ -40,6 +40,7 @@ const reviewMetaSchema = new Schema({
   product_id: {
     type: Number,
     index: true,
+    unique: true,
   },
   dateUpdated: {
     type: Date,
