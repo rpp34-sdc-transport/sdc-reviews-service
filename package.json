@@ -13,7 +13,9 @@
     "transform": "node server/importDb/transform.js",
     "test": "jest",
     "aws" : "bash bashScripts/awsServerLogin.sh",
-    "db-cleanup": "node testK6/cleanUp.js"
+    "db-cleanup": "node testK6/cleanUp.js",
+    "config-server1": "bash bashScripts/configServer1.sh",
+    "config-server2": "bash bashScripts/configServer2.sh"
   },
   "repository": {
     "type": "git",
