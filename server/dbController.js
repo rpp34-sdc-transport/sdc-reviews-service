@@ -132,7 +132,13 @@ const postReview = async (req, res) => {
     res.send('Created'); // apparently the frontEnd is looking for this to check a review is submitted successfully
 
     // also need to update metas if exists!!
-    ReviewMetas.updateOne({ product_id }, { $set: { lastReviewDate: newReview.date } });
+    console.log(`Review ${review_id} created at: ${newReview.date}`)
+    try {
+      await ReviewMetas.updateOne({ product_id }, { $set: { lastReviewDate: newReview.date } });
+      console.log('ReviewMeta updateOne() complete without errors');
+    } catch (err) {
+      console.log(err)
+    }
   } catch (err) {
     serverErr(err, res);
   }
