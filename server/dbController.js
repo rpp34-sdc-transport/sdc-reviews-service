@@ -134,7 +134,7 @@ const postReview = async (req, res) => {
     // also need to update metas if exists!!
     // console.log(`Review ${review_id} created at: ${newReview.date}`)
     try {
-      ReviewMetas.updateOne({ product_id }, { $set: { lastReviewDate: newReview.date } });
+      await ReviewMetas.updateOne({ product_id }, { $set: { lastReviewDate: newReview.date } });
       // console.log('ReviewMeta updateOne() complete without errors');
     } catch (err) {
       // console.log(err)
