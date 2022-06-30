@@ -1,3 +1,5 @@
+export NVM_DIR=$HOME/.nvm;
+source $NVM_DIR/nvm.sh;
 nvm install 16.15.1
 node -e "console.log('Running Node.js ' + process.version)"
 npm install pm2@latest -g
