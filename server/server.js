@@ -1,5 +1,11 @@
-const { exec } = require("child_process");
+const express = require('express');
+require('dotenv').config();
 
+const router = require('./router.js');
+const server = express();
+const PORT = process.env.PORT || 3001;
+
+const { exec } = require("child_process");
 exec('sudo iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 3001', (error, stdout, stderr) => {
     if (error) {
         console.log(`error: ${error.message}`);
@@ -9,15 +15,8 @@ exec('sudo iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT -
         console.log(`stderr: ${stderr}`);
         return;
     }
-    console.log(`stdout: ${stdout}`);
+    console.log(`stdout: forwarding TCP port 80 to ${PORT}. ${stdout}`);
 });
-
-const express = require('express');
-require('dotenv').config();
-
-const router = require('./router.js');
-const server = express();
-const PORT = process.env.PORT || 3001;
 
 server.use(express.json());
 server.use(express.urlencoded({extended: true}));
