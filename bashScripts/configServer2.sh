@@ -1,4 +1,4 @@
-nvm install node 16.15.1
+nvm install 16.15.1
 node -e "console.log('Running Node.js ' + process.version)"
 npm install pm2@latest -g
 pm2 start server/server.js
