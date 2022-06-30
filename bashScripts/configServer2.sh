@@ -1,5 +1,6 @@
-export NVM_DIR=$HOME/.nvm;
-source $NVM_DIR/nvm.sh;
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 nvm install 16.15.1
 node -e "console.log('Running Node.js ' + process.version)"
 npm install pm2@latest -g
