@@ -1,1 +1,3 @@
-mongoexport --collection=reviews --db=atelierReviews --out=/Users/Zhaowei/rpp34/sdc-reviews-service/extractedData/transformed_reviews_backup.json
+mongoexport --collection=reviews --db=atelierReviews --out=/Users/Zhaowei/rpp34/sdc-reviews-service/extractedData/backup_transformed_reviews.json
+mongoexport --collection=review_metas --db=atelierReviews --out=/Users/Zhaowei/rpp34/sdc-reviews-service/extractedData/backup_review_metas.json
+mongoexport --collection=characteristics_descriptions --db=atelierReviews --out=/Users/Zhaowei/rpp34/sdc-reviews-service/extractedData/backup_characteristics_descriptions.json

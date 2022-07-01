@@ -2,9 +2,12 @@ node_modules/
 *.env
 test_coverage/
 *.DS_Store
-extractedData/*.csv
+extractedData/**/*.csv
+extractedData/**/*.json
 extractedData/*.json
+extractedData/**/*.gz
 *.pem
+<<<<<<< HEAD
 awsLogin.sh=
 extractedData/*
 upload2EC2.sh
@@ -12,3 +15,7 @@ uploads/
 *Login.sh
 CompleteMongodump/
 dump/
+=======
+awsLogin.sh
+*.sh
+>>>>>>> origin
