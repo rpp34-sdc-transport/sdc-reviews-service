@@ -68,11 +68,6 @@ const reviewMetaSchema = new Schema({
 });
 
 const reviewSchema = new Schema({
-  review_id: {
-    type: Number,
-    index: true,
-    required: true,
-  },
   product_id: {
     type: Number,
     index: true,
