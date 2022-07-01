@@ -24,7 +24,6 @@ const getReviews = async (req, res) => {
     'relevant': { 'helpfulness': -1 }
   }
   const excludeFeilds = {
-    '_id': 0,
     'reported': 0,
     'characteristics': 0,
     "__v": 0,
@@ -51,8 +50,12 @@ const getReviews = async (req, res) => {
   }
 
   try {
-    response.results = await Reviews.find({ product_id, reported: { $ne: true } })
-      .sort(sortOptions[sort]).limit(count).select(excludeFeilds);
+    var results = await Reviews.find({ product_id, reported: { $ne: true } })
+      .sort(sortOptions[sort]).limit(count).select(excludeFeilds).lean();
+    for (let i = 0; i < results.length; i++) {
+      results[i].review_id = results[i]._id.toString();
+    }
+    response.results = results;
     res.status(200);
     res.send(response);
   } catch (err) {
