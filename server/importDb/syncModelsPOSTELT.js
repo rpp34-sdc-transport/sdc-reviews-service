@@ -19,7 +19,6 @@ const connectDB = async () => {
       CharDescs.init(),
       ReviewMetas.init(),
       Reviews.init(),
-      ReviewIncrementer.init(),
     ]);
     await mongoose.syncIndexes();
 

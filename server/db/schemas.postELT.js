@@ -3,7 +3,6 @@ const Schema = mongoose.Schema;
 const reviewModelName = 'reviews';
 const metaModelName = 'review_metas';
 const charDescModelName = 'characteristics_descriptions';
-const reviewIncrementModelName = 'review_incrementer';
 
 
 const characteristicsDescriptionSchema = new Schema({
@@ -96,18 +95,13 @@ const reviewSchema = new Schema({
   characteristics: [postELTCharSchema],
 });
 
-const reviewIncrementerSchema = new Schema({
-  review_id: Number
-}, { capped: { size: 4096, max: 1 } });
 
 const ReviewMetas = mongoose.model(metaModelName, reviewMetaSchema, metaModelName);
 const Reviews = mongoose.model(reviewModelName, reviewSchema, reviewModelName);
 const CharDescs = mongoose.model(charDescModelName, characteristicsDescriptionSchema, charDescModelName);
-const ReviewIncrementer = mongoose.model(reviewIncrementModelName, reviewIncrementerSchema, reviewIncrementModelName);
 
 module.exports = {
   ReviewMetas,
   Reviews,
   CharDescs,
-  ReviewIncrementer,
 };
