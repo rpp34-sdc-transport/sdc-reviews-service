@@ -7,7 +7,6 @@ extractedData/**/*.json
 extractedData/*.json
 extractedData/**/*.gz
 *.pem
-<<<<<<< HEAD
 awsLogin.sh=
 extractedData/*
 upload2EC2.sh
@@ -15,7 +14,3 @@ uploads/
 *Login.sh
 CompleteMongodump/
 dump/
-=======
-awsLogin.sh
-*.sh
->>>>>>> origin
