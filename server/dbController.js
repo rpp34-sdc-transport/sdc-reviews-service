@@ -1,4 +1,5 @@
 require('./db/db.js');
+const mongoose = require('mongoose');
 const {
   ReviewMetas,
   Reviews,
@@ -74,7 +75,6 @@ const getReviewMeta = async (req, res) => {
   const excludeFeilds = {
     '_id': 0,
     '__v': 0,
-    // 'lastReviewDate': 0,
   }
 
   var empty = {
@@ -126,6 +126,7 @@ const postReview = async (req, res) => {
     return;
   }
   try {
+    /***TO BE REMOVED!****/
     var { review_id } = await ReviewIncrementer.findOneAndUpdate({}, { $inc: { review_id: 1 } });
     parsedReview.review_id = review_id;
     var newReview = await Reviews.create(parsedReview);
@@ -150,17 +151,12 @@ const postReview = async (req, res) => {
 }
 
 const putHelpfulReview = async (req, res) => {
-  var review_id = idParser(req.params.review_id);
+  var review_id = req.params.review_id;
   // console.log('review_id:', review_id);
 
-  if (review_id === false) {
-    res.status(422)
-    res.send('Error: invalid review_id provided')
-    return;
-  }
   try {
     // eslint-disable-next-line no-unused-vars
-    await Reviews.updateOne({ review_id }, { $inc: { helpfulness: 1 } });
+    await Reviews.updateOne({ _id: mongoose.Types.ObjectId(review_id) }, { $inc: { helpfulness: 1 } });
     // console.log('Helpfulness: ', review.helpfulness);
     res.status(204);
     res.send('OK');
@@ -170,17 +166,11 @@ const putHelpfulReview = async (req, res) => {
 }
 
 const putReportReview = async (req, res) => {
-  var review_id = idParser(req.params.review_id);
-  // console.log('review_id:', review_id);
+  var review_id = req.params.review_id;
 
-  if (review_id === false) {
-    res.status(422)
-    res.send('Error: invalid review_id provided')
-    return;
-  }
   try {
     // eslint-disable-next-line no-unused-vars
-    await Reviews.updateOne({ review_id }, { $set: { reported: true } });
+    await Reviews.updateOne({ _id: mongoose.Types.ObjectId(review_id) }, { $set: { reported: true } });
     // console.log('Reported: ', review.reported);
     res.status(204);
     res.send('OK');
