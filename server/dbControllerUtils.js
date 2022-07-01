@@ -107,13 +107,18 @@ const compileReviews = async (product_id) => {
   }
 
   result.characteristics = finalChar;
+  result.dateUpdated = new Date();
   try {
     // Technically I can return the result regardless of the save,
     // but this is for stress testing purposes, and final code will have that
     // statment moved after the return result
 
     // *****************************************************
-    await ReviewMetas.create(result);
+    ReviewMetas.findOneAndUpdate({product_id},result, {upsert: true})
+      .then()
+      .catch((dbErr)=>{
+        throw (dbErr.message)
+      })
     // console.log('Review Meta Save OK!');
     // *****************************************************
 
@@ -122,7 +127,7 @@ const compileReviews = async (product_id) => {
     // will have to test if this error throwing will cascade all the way to the top!
     // and test if the error code is executed.
     // console.log('Review Meta Save FAILED!', err.message);
-    return err;
+    throw (err.message)
   }
 }
 

@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const {
   ReviewMetas,
   Reviews,
-  ReviewIncrementer,
 } = require('./db/schemas.postELT.js');
 
 const {
@@ -94,8 +93,10 @@ const getReviewMeta = async (req, res) => {
   if (result === null || result?.dateUpdated < result?.lastReviewDate) {
     // Conditions that require a recompile
     // console.log('Review Meta Needs to be compiled.');
+
     try {
       result = await compileReviews(product_id);
+      // console.log('Compiled results:', result);
       res.status(200);
       res.send(result);
     } catch (err) {
@@ -127,21 +128,15 @@ const postReview = async (req, res) => {
   }
   try {
 
-    var newReview = await Reviews.create(parsedReview);
+    // Creating review, but also updating Meta lasteReviewedDate
+    await Promise.all([Reviews.create(parsedReview), ReviewMetas.updateOne({ product_id }, { $set: { lastReviewDate: new Date() } }) ])
+    // var newReview = await Reviews.create(parsedReview);
     // console.log('Posted Review', newReview);
 
     res.status(201);
     res.send('Created'); // apparently the frontEnd is looking for this to check a review is submitted successfully
 
-    // also need to update metas if exists!!
-    // console.log(`Review ${review_id} created at: ${newReview.date}`)
-    try {
-      await ReviewMetas.updateOne({ product_id }, { $set: { lastReviewDate: newReview.date } });
-      // Must have await to complete the request!
-      // console.log('ReviewMeta updateOne() complete without errors');
-    } catch (err) {
-      // console.log(err)
-    }
+
   } catch (err) {
     serverErr(err, res);
   }
