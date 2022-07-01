@@ -1,5 +1,4 @@
-const mongoose = require('mongoose');
-const databaseName = 'atelierReviews';
+const mongoose = require('../db/db.js');
 const {
   ReviewMetas,
   Reviews,
@@ -10,9 +9,6 @@ const {
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(`mongodb://localhost:27017/${databaseName}`);
-    console.log('MongoDB connected!!', Date());
-
     await CharDescs.init();
     await ReviewMetas.init();
     await Reviews.init();

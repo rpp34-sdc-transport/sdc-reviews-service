@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
-const mongoose = require('mongoose');
-const databaseName = 'atelierReviews';
+const mongoose = require('../db/db.js');
 const {
   ReviewMetas,
   Reviews,
@@ -11,9 +10,6 @@ const {
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(`mongodb://localhost:27017/${databaseName}`);
-    console.log('MongoDB connected!!', Date());
-
     var counter = 0;
     var counter2 = 0;
     for await (const review of Reviews.find()) {
