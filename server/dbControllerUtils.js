@@ -12,7 +12,7 @@ const {
  * @returns id as a `number` or `false` if the id is invalid
  */
 const idParser = (id) => {
-  if (id.length === 0) {
+  if (id?.length === 0 || id === undefined) {
     return false;
   }
   var parsed = Number(id);

@@ -5,6 +5,19 @@ const router = require('./router.js');
 const server = express();
 const PORT = process.env.PORT || 3001;
 
+const { exec } = require("child_process");
+exec('sudo iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 3001', (error, stdout, stderr) => {
+    if (error) {
+        console.log(`error: ${error.message}`);
+        return;
+    }
+    if (stderr) {
+        console.log(`stderr: ${stderr}`);
+        return;
+    }
+    console.log(`stdout: forwarding TCP port 80 to ${PORT}. ${stdout}`);
+});
+
 server.use(express.json());
 server.use(express.urlencoded({extended: true}));
 
@@ -34,6 +47,10 @@ server.use('/reviews', router)
 server.get('/', (req, res) => {
   res.send('Hello Word, welcome to review service!');
 });
+
+server.get('/loaderio-90e63fab73e9d8f102c56058467bea46*', (req, res) => {
+  res.send('loaderio-90e63fab73e9d8f102c56058467bea46');
+})
 
 server.listen(PORT, () => {
   console.log(`Review Service Listening on ${PORT}`);

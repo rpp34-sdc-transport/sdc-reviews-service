@@ -7,5 +7,10 @@ extractedData/**/*.json
 extractedData/*.json
 extractedData/**/*.gz
 *.pem
-awsLogin.sh
-*.sh
+awsLogin.sh=
+extractedData/*
+upload2EC2.sh
+uploads/
+*Login.sh
+CompleteMongodump/
+dump/

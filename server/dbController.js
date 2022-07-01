@@ -71,7 +71,7 @@ const getReviewMeta = async (req, res) => {
   const excludeFeilds = {
     '_id': 0,
     '__v': 0,
-    'lastReviewDate': 0,
+    // 'lastReviewDate': 0,
   }
 
   var empty = {
@@ -132,9 +132,13 @@ const postReview = async (req, res) => {
     res.send('Created'); // apparently the frontEnd is looking for this to check a review is submitted successfully
 
     // also need to update metas if exists!!
-    var status = await ReviewMetas.findOneAndUpdate({ product_id }, { lastReviewDate: newReview.date });
-    if (status === null) {
-      // console.log('ReviewMeta was not compiled for this Product');
+    // console.log(`Review ${review_id} created at: ${newReview.date}`)
+    try {
+      await ReviewMetas.updateOne({ product_id }, { $set: { lastReviewDate: newReview.date } });
+      // Must have await to complete the request!
+      // console.log('ReviewMeta updateOne() complete without errors');
+    } catch (err) {
+      // console.log(err)
     }
   } catch (err) {
     serverErr(err, res);
@@ -153,7 +157,7 @@ const putHelpfulReview = async (req, res) => {
   }
   try {
     // eslint-disable-next-line no-unused-vars
-    let review = await Reviews.findOneAndUpdate({ review_id }, { $inc: { helpfulness: 1 } }, { new: true });
+    await Reviews.updateOne({ review_id }, { $inc: { helpfulness: 1 } });
     // console.log('Helpfulness: ', review.helpfulness);
     res.status(204);
     res.send('OK');
@@ -173,7 +177,7 @@ const putReportReview = async (req, res) => {
   }
   try {
     // eslint-disable-next-line no-unused-vars
-    let review = await Reviews.findOneAndUpdate({ review_id }, { reported: true }, { new: true });
+    await Reviews.updateOne({ review_id }, { $set: { reported: true } });
     // console.log('Reported: ', review.reported);
     res.status(204);
     res.send('OK');
