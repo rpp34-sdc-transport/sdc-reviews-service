@@ -126,9 +126,7 @@ const postReview = async (req, res) => {
     return;
   }
   try {
-    /***TO BE REMOVED!****/
-    var { review_id } = await ReviewIncrementer.findOneAndUpdate({}, { $inc: { review_id: 1 } });
-    parsedReview.review_id = review_id;
+
     var newReview = await Reviews.create(parsedReview);
     // console.log('Posted Review', newReview);
 
