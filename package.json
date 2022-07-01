@@ -14,7 +14,8 @@
     "test": "jest",
     "aws" : "bash bashScripts/awsServerLogin.sh",
     "db-cleanup": "node testK6/cleanUp.js",
-    "config-server": "bash bashScripts/configServer1.sh"
+    "config-server": "bash bashScripts/configServer1.sh",
+    "config-loadBal": "bash bashScripts/configLoadBal.sh"
   },
   "repository": {
     "type": "git",
