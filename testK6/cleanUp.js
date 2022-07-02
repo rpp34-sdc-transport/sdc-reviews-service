@@ -22,13 +22,6 @@ const connectDB = async () => {
       console.log(e.message)
     }
 
-    // resetting the incrementer for the review_id
-    try {
-      await ReviewIncrementer.collection.drop();
-    } catch (e) {
-      console.log(e.message)
-    }
-
     console.log('Clean up completed', Date());
 
   } catch (err) {

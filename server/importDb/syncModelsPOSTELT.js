@@ -3,18 +3,10 @@ const {
   ReviewMetas,
   Reviews,
   CharDescs,
-  ReviewIncrementer
 } = require('../db/schemas.postELT.js');
 
 const connectDB = async () => {
   try {
-
-    try {
-      await ReviewIncrementer.collection.drop();
-    } catch (e) {
-      console.log(e.message)
-    }
-
     await Promise.all([
       CharDescs.init(),
       ReviewMetas.init(),
