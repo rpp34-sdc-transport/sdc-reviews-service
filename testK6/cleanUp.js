@@ -1,7 +1,6 @@
 const mongoose = require('../server/db/db.js');
 const {
   Reviews,
-  ReviewIncrementer
 } = require('../server/db/schemas.postELT.js');
 
 const connectDB = async () => {
